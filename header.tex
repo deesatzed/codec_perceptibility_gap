@@ -1,0 +1,5 @@
+% pandoc header-include for the manuscript PDF build (see DOCS_BUILD.md).
+% Small font inside tables so wide gate-matrix / channel tables fit the page.
+\usepackage{etoolbox}
+\AtBeginEnvironment{longtable}{\footnotesize}
+\AtBeginEnvironment{tabular}{\footnotesize}
