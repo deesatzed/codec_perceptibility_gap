@@ -1,0 +1,29 @@
+# Manifest
+
+- `goal` / `GOAL.md`: Codex-facing `/goal` instructions and definition of done.
+- `README.md`: human setup instructions.
+- `requirements.txt`: Python dependencies, including pytest.
+- `pytest.ini`: ensures local `src` package imports correctly under pytest.
+- `Makefile`: convenience commands for test/demo/confirmatory runs.
+- `configs/demo.json`: fast local run.
+- `configs/confirmatory_local.json`: larger local run.
+- `src/proof_ladder.py`: progressive validation ladder (S0–S8), simulator, estimators, controls.
+- `src/codec_contest.py`: CodecGuard (audit + LOCO + permutation null) and CodecBench metrics.
+- `src/magnetic_pendulum.py`: nonlinear source-family stress test (honest physics vs leak control).
+- `src/sources.py`: `SourceFamily` protocol + registry (linear + Duffing-nonlinear oscillators).
+- `src/cross_family.py`: cross-family orchestrator and gate matrix.
+- `src/report.py`: report writer, plotting, and cross-family gate-matrix table.
+- `src/run_all.py`: one-command orchestrator (emits cross-family block when >1 source).
+- `tests/test_smoke.py`: minimal smoke tests.
+- `tests/test_regression_linear.py`: freezes linear baseline so refactors can't drift it.
+- `tests/test_sources.py`: source-family shape + no-target-leakage guards.
+- `tests/test_cross_family.py`: gate-matrix and nonlinear-S7 checks.
+- `tests/fixtures/baseline_linear.json`: frozen linear regression fixture.
+- `examples/tasks.jsonl`: starter known-answer tasks for optional LLM port.
+- `prompts/codecguard_ollama_prompts.md`: optional local LLM prompt templates.
+- `docs/*`: design notes, reporting template, and `PLAN_F5_cross_family.md`.
+- `results/critical_review.md`: 8-finding adversarial audit.
+- `results/mitigation_results.md`: before/after evidence for the integrity fixes.
+- `results/cross_family_results.md`: cross-family generalization writeup.
+- `results/cross_family/*`: canonical run output (results.json, report.md, figures).
+- `HANDOFF_LATEST.md` / `HANDOFF_2026-05-30.md`: engineering handoff packet.

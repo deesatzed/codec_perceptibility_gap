@@ -1,0 +1,1081 @@
+{
+  "codec_contest": {
+    "codec_robustness": {
+      "grounded_recovery_auc_mean": 0.547,
+      "grounded_structural_robustness_mean": 0.385,
+      "interpretation": "robustness is useful recovery retained across k, not mere flatness",
+      "per_seed": [
+        {
+          "codec_ladder_k": [
+            16,
+            8,
+            4,
+            2
+          ],
+          "grounded_channel": {
+            "collapse_high_to_low": 0.181,
+            "graceful_degradation_conditional": 0.696,
+            "nrmse": {
+              "16": 0.406,
+              "2": 0.586,
+              "4": 0.462,
+              "8": 0.421
+            },
+            "recovery_auc": 0.531,
+            "recovery_rho": {
+              "16": 0.595,
+              "2": 0.414,
+              "4": 0.538,
+              "8": 0.579
+            },
+            "structural_robustness": 0.37
+          },
+          "rho_auc_gap_grounded_minus_uninformative": 0.468,
+          "seed": 0,
+          "uninformative_baseline_nrmse": 1.001,
+          "uninformative_or_fluency_only_channel": {
+            "collapse_high_to_low": 0.022,
+            "graceful_degradation_conditional": 0.0,
+            "nrmse": {
+              "16": 0.931,
+              "2": 0.953,
+              "4": 0.936,
+              "8": 0.932
+            },
+            "recovery_auc": 0.063,
+            "recovery_rho": {
+              "16": 0.07,
+              "2": 0.048,
+              "4": 0.065,
+              "8": 0.069
+            },
+            "structural_robustness": 0.0
+          }
+        },
+        {
+          "codec_ladder_k": [
+            16,
+            8,
+            4,
+            2
+          ],
+          "grounded_channel": {
+            "collapse_high_to_low": 0.174,
+            "graceful_degradation_conditional": 0.717,
+            "nrmse": {
+              "16": 0.386,
+              "2": 0.561,
+              "4": 0.445,
+              "8": 0.403
+            },
+            "recovery_auc": 0.552,
+            "recovery_rho": {
+              "16": 0.614,
+              "2": 0.44,
+              "4": 0.555,
+              "8": 0.598
+            },
+            "structural_robustness": 0.395
+          },
+          "rho_auc_gap_grounded_minus_uninformative": 0.493,
+          "seed": 1,
+          "uninformative_baseline_nrmse": 1.001,
+          "uninformative_or_fluency_only_channel": {
+            "collapse_high_to_low": 0.026,
+            "graceful_degradation_conditional": 0.0,
+            "nrmse": {
+              "16": 0.934,
+              "2": 0.96,
+              "4": 0.941,
+              "8": 0.934
+            },
+            "recovery_auc": 0.059,
+            "recovery_rho": {
+              "16": 0.067,
+              "2": 0.041,
+              "4": 0.06,
+              "8": 0.066
+            },
+            "structural_robustness": 0.0
+          }
+        },
+        {
+          "codec_ladder_k": [
+            16,
+            8,
+            4,
+            2
+          ],
+          "grounded_channel": {
+            "collapse_high_to_low": 0.187,
+            "graceful_degradation_conditional": 0.689,
+            "nrmse": {
+              "16": 0.399,
+              "2": 0.586,
+              "4": 0.463,
+              "8": 0.417
+            },
+            "recovery_auc": 0.534,
+            "recovery_rho": {
+              "16": 0.601,
+              "2": 0.414,
+              "4": 0.537,
+              "8": 0.583
+            },
+            "structural_robustness": 0.368
+          },
+          "rho_auc_gap_grounded_minus_uninformative": 0.472,
+          "seed": 2,
+          "uninformative_baseline_nrmse": 1.0,
+          "uninformative_or_fluency_only_channel": {
+            "collapse_high_to_low": 0.013,
+            "graceful_degradation_conditional": 0.0,
+            "nrmse": {
+              "16": 0.934,
+              "2": 0.947,
+              "4": 0.939,
+              "8": 0.934
+            },
+            "recovery_auc": 0.062,
+            "recovery_rho": {
+              "16": 0.067,
+              "2": 0.054,
+              "4": 0.062,
+              "8": 0.066
+            },
+            "structural_robustness": 0.0
+          }
+        },
+        {
+          "codec_ladder_k": [
+            16,
+            8,
+            4,
+            2
+          ],
+          "grounded_channel": {
+            "collapse_high_to_low": 0.194,
+            "graceful_degradation_conditional": 0.694,
+            "nrmse": {
+              "16": 0.367,
+              "2": 0.56,
+              "4": 0.423,
+              "8": 0.382
+            },
+            "recovery_auc": 0.568,
+            "recovery_rho": {
+              "16": 0.634,
+              "2": 0.44,
+              "4": 0.577,
+              "8": 0.619
+            },
+            "structural_robustness": 0.394
+          },
+          "rho_auc_gap_grounded_minus_uninformative": 0.531,
+          "seed": 3,
+          "uninformative_baseline_nrmse": 1.0,
+          "uninformative_or_fluency_only_channel": {
+            "collapse_high_to_low": 0.018,
+            "graceful_degradation_conditional": 0.0,
+            "nrmse": {
+              "16": 0.958,
+              "2": 0.975,
+              "4": 0.962,
+              "8": 0.959
+            },
+            "recovery_auc": 0.037,
+            "recovery_rho": {
+              "16": 0.043,
+              "2": 0.025,
+              "4": 0.038,
+              "8": 0.042
+            },
+            "structural_robustness": 0.0
+          }
+        },
+        {
+          "codec_ladder_k": [
+            16,
+            8,
+            4,
+            2
+          ],
+          "grounded_channel": {
+            "collapse_high_to_low": 0.173,
+            "graceful_degradation_conditional": 0.718,
+            "nrmse": {
+              "16": 0.387,
+              "2": 0.56,
+              "4": 0.444,
+              "8": 0.404
+            },
+            "recovery_auc": 0.552,
+            "recovery_rho": {
+              "16": 0.614,
+              "2": 0.441,
+              "4": 0.556,
+              "8": 0.597
+            },
+            "structural_robustness": 0.396
+          },
+          "rho_auc_gap_grounded_minus_uninformative": 0.5,
+          "seed": 4,
+          "uninformative_baseline_nrmse": 1.002,
+          "uninformative_or_fluency_only_channel": {
+            "collapse_high_to_low": 0.016,
+            "graceful_degradation_conditional": 0.0,
+            "nrmse": {
+              "16": 0.944,
+              "2": 0.961,
+              "4": 0.948,
+              "8": 0.946
+            },
+            "recovery_auc": 0.052,
+            "recovery_rho": {
+              "16": 0.057,
+              "2": 0.041,
+              "4": 0.054,
+              "8": 0.056
+            },
+            "structural_robustness": 0.0
+          }
+        }
+      ],
+      "rho_auc_gap_mean": 0.493,
+      "uninformative_recovery_auc_mean": 0.055,
+      "uninformative_structural_robustness_mean": 0.0
+    },
+    "multi_codec_audit": {
+      "auc_for_top10pct_error": 0.935,
+      "catch_rate_top10pct_error_at_top25pct_disagreement": 0.924,
+      "corr_disagreement_vs_ensemble_error": 0.756,
+      "flag_precision": 0.37,
+      "interpretation": "positive-control audit: disagreement should rise with true error and enrich worst-error cases",
+      "mean_error_by_disagreement_quartile": [
+        0.359,
+        0.502,
+        0.637,
+        0.925
+      ],
+      "mean_pairwise_codec_error_correlation": 0.553,
+      "per_seed": [
+        {
+          "auc_for_top10pct_error": 0.947,
+          "catch_rate_top10pct_error_at_top25pct_disagreement": 0.96,
+          "codecs": [
+            "native-stats",
+            "coupling+native",
+            "direct-downsample",
+            "symbolic(k=4)"
+          ],
+          "corr_bootstrap": {
+            "ci95": [
+              0.729,
+              0.827
+            ],
+            "mean": 0.783
+          },
+          "corr_disagreement_vs_ensemble_error": 0.784,
+          "flag_precision": 0.384,
+          "mean_error_by_disagreement_quartile": [
+            0.372,
+            0.531,
+            0.625,
+            0.97
+          ],
+          "mean_pairwise_codec_error_correlation": 0.556,
+          "per_codec_mean_std_error": {
+            "coupling+native": 0.845,
+            "direct-downsample": 0.237,
+            "native-stats": 0.922,
+            "symbolic(k=4)": 0.89
+          },
+          "random_catch_baseline": 0.25,
+          "seed": 0
+        },
+        {
+          "auc_for_top10pct_error": 0.924,
+          "catch_rate_top10pct_error_at_top25pct_disagreement": 0.9,
+          "codecs": [
+            "native-stats",
+            "coupling+native",
+            "direct-downsample",
+            "symbolic(k=4)"
+          ],
+          "corr_bootstrap": {
+            "ci95": [
+              0.65,
+              0.767
+            ],
+            "mean": 0.713
+          },
+          "corr_disagreement_vs_ensemble_error": 0.715,
+          "flag_precision": 0.36,
+          "mean_error_by_disagreement_quartile": [
+            0.353,
+            0.481,
+            0.648,
+            0.901
+          ],
+          "mean_pairwise_codec_error_correlation": 0.529,
+          "per_codec_mean_std_error": {
+            "coupling+native": 0.803,
+            "direct-downsample": 0.227,
+            "native-stats": 0.904,
+            "symbolic(k=4)": 0.855
+          },
+          "random_catch_baseline": 0.25,
+          "seed": 1
+        },
+        {
+          "auc_for_top10pct_error": 0.954,
+          "catch_rate_top10pct_error_at_top25pct_disagreement": 0.98,
+          "codecs": [
+            "native-stats",
+            "coupling+native",
+            "direct-downsample",
+            "symbolic(k=4)"
+          ],
+          "corr_bootstrap": {
+            "ci95": [
+              0.717,
+              0.819
+            ],
+            "mean": 0.768
+          },
+          "corr_disagreement_vs_ensemble_error": 0.769,
+          "flag_precision": 0.392,
+          "mean_error_by_disagreement_quartile": [
+            0.356,
+            0.502,
+            0.662,
+            0.945
+          ],
+          "mean_pairwise_codec_error_correlation": 0.561,
+          "per_codec_mean_std_error": {
+            "coupling+native": 0.807,
+            "direct-downsample": 0.25,
+            "native-stats": 0.92,
+            "symbolic(k=4)": 0.902
+          },
+          "random_catch_baseline": 0.25,
+          "seed": 2
+        },
+        {
+          "auc_for_top10pct_error": 0.903,
+          "catch_rate_top10pct_error_at_top25pct_disagreement": 0.82,
+          "codecs": [
+            "native-stats",
+            "coupling+native",
+            "direct-downsample",
+            "symbolic(k=4)"
+          ],
+          "corr_bootstrap": {
+            "ci95": [
+              0.651,
+              0.757
+            ],
+            "mean": 0.708
+          },
+          "corr_disagreement_vs_ensemble_error": 0.708,
+          "flag_precision": 0.328,
+          "mean_error_by_disagreement_quartile": [
+            0.356,
+            0.493,
+            0.631,
+            0.852
+          ],
+          "mean_pairwise_codec_error_correlation": 0.564,
+          "per_codec_mean_std_error": {
+            "coupling+native": 0.801,
+            "direct-downsample": 0.248,
+            "native-stats": 0.872,
+            "symbolic(k=4)": 0.825
+          },
+          "random_catch_baseline": 0.25,
+          "seed": 3
+        },
+        {
+          "auc_for_top10pct_error": 0.948,
+          "catch_rate_top10pct_error_at_top25pct_disagreement": 0.96,
+          "codecs": [
+            "native-stats",
+            "coupling+native",
+            "direct-downsample",
+            "symbolic(k=4)"
+          ],
+          "corr_bootstrap": {
+            "ci95": [
+              0.768,
+              0.845
+            ],
+            "mean": 0.805
+          },
+          "corr_disagreement_vs_ensemble_error": 0.806,
+          "flag_precision": 0.384,
+          "mean_error_by_disagreement_quartile": [
+            0.356,
+            0.501,
+            0.619,
+            0.957
+          ],
+          "mean_pairwise_codec_error_correlation": 0.556,
+          "per_codec_mean_std_error": {
+            "coupling+native": 0.811,
+            "direct-downsample": 0.233,
+            "native-stats": 0.891,
+            "symbolic(k=4)": 0.856
+          },
+          "random_catch_baseline": 0.25,
+          "seed": 4
+        }
+      ],
+      "random_catch_baseline": 0.25
+    }
+  },
+  "config": {
+    "T": 20.0,
+    "delta_eq": 0.03,
+    "drive_amp": 0.3,
+    "drive_w": 0.7,
+    "dt": 0.05,
+    "eff_floor": 0.02,
+    "estimator": "ridge",
+    "magnetic": {
+      "divergence_noise": 0.12,
+      "dt": 0.03,
+      "magnets": [
+        3,
+        4,
+        5
+      ],
+      "n_test": 600,
+      "n_train": 1400,
+      "noise_flip_base": 0.05,
+      "noise_flip_per_extra_magnet": 0.035,
+      "preview_steps": 60,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "steps": 220
+    },
+    "mlp_hidden": [
+      96,
+      48
+    ],
+    "mlp_iter": 220,
+    "n_boot": 400,
+    "n_test": 500,
+    "n_train": 1200,
+    "ridge_alpha": 1.0,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "config_path": "configs/confirmatory_local.json",
+  "environment": {
+    "numpy": "2.4.6",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python": "3.13.9",
+    "scikit_learn": "1.8.0"
+  },
+  "magnetic_pendulum": {
+    "by_magnet_count": {
+      "3": {
+        "basin_entropy_norm_mean": 0.997,
+        "direct_accuracy_mean": 0.965,
+        "direct_divergence_nrmse_mean": 0.829,
+        "direct_log_loss_mean": 0.143,
+        "expanded_accuracy_mean": 0.968,
+        "expanded_divergence_nrmse_mean": 0.275,
+        "expanded_log_loss_mean": 0.497,
+        "native_accuracy_mean": 0.946,
+        "native_divergence_nrmse_mean": 0.833,
+        "native_log_loss_mean": 0.152
+      },
+      "4": {
+        "basin_entropy_norm_mean": 0.998,
+        "direct_accuracy_mean": 0.953,
+        "direct_divergence_nrmse_mean": 0.89,
+        "direct_log_loss_mean": 0.18,
+        "expanded_accuracy_mean": 0.936,
+        "expanded_divergence_nrmse_mean": 0.314,
+        "expanded_log_loss_mean": 0.816,
+        "native_accuracy_mean": 0.924,
+        "native_divergence_nrmse_mean": 0.89,
+        "native_log_loss_mean": 0.281
+      },
+      "5": {
+        "basin_entropy_norm_mean": 0.996,
+        "direct_accuracy_mean": 0.928,
+        "direct_divergence_nrmse_mean": 0.836,
+        "direct_log_loss_mean": 0.254,
+        "expanded_accuracy_mean": 0.902,
+        "expanded_divergence_nrmse_mean": 0.333,
+        "expanded_log_loss_mean": 1.62,
+        "native_accuracy_mean": 0.889,
+        "native_divergence_nrmse_mean": 0.818,
+        "native_log_loss_mean": 0.51
+      }
+    },
+    "description": "nonlinear source-family stress test; basin labels and finite-time divergence are simulator-known latents",
+    "magnets": [
+      3,
+      4,
+      5
+    ],
+    "per_seed": [
+      {
+        "basin_label": {
+          "chance_accuracy": 0.333,
+          "direct": {
+            "accuracy": 0.953,
+            "log_loss": 0.151
+          },
+          "expanded_proxy": {
+            "accuracy": 0.957,
+            "log_loss": 0.481
+          },
+          "native": {
+            "accuracy": 0.935,
+            "log_loss": 0.256
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.999,
+          "divergence_mean": 0.31,
+          "divergence_sd": 0.097,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.819,
+          "expanded_proxy": 0.272,
+          "native": 0.852
+        },
+        "flip_prob_proxy": 0.05,
+        "m": 3,
+        "seed": 0
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.333,
+          "direct": {
+            "accuracy": 0.96,
+            "log_loss": 0.25
+          },
+          "expanded_proxy": {
+            "accuracy": 0.973,
+            "log_loss": 0.511
+          },
+          "native": {
+            "accuracy": 0.945,
+            "log_loss": 0.133
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 1.0,
+          "divergence_mean": 0.31,
+          "divergence_sd": 0.096,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.84,
+          "expanded_proxy": 0.266,
+          "native": 0.847
+        },
+        "flip_prob_proxy": 0.05,
+        "m": 3,
+        "seed": 1
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.333,
+          "direct": {
+            "accuracy": 0.968,
+            "log_loss": 0.125
+          },
+          "expanded_proxy": {
+            "accuracy": 0.963,
+            "log_loss": 0.476
+          },
+          "native": {
+            "accuracy": 0.952,
+            "log_loss": 0.126
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.999,
+          "divergence_mean": 0.311,
+          "divergence_sd": 0.095,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.827,
+          "expanded_proxy": 0.274,
+          "native": 0.831
+        },
+        "flip_prob_proxy": 0.05,
+        "m": 3,
+        "seed": 2
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.333,
+          "direct": {
+            "accuracy": 0.968,
+            "log_loss": 0.125
+          },
+          "expanded_proxy": {
+            "accuracy": 0.982,
+            "log_loss": 0.323
+          },
+          "native": {
+            "accuracy": 0.94,
+            "log_loss": 0.128
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.993,
+          "divergence_mean": 0.31,
+          "divergence_sd": 0.094,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.811,
+          "expanded_proxy": 0.267,
+          "native": 0.798
+        },
+        "flip_prob_proxy": 0.05,
+        "m": 3,
+        "seed": 3
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.333,
+          "direct": {
+            "accuracy": 0.978,
+            "log_loss": 0.063
+          },
+          "expanded_proxy": {
+            "accuracy": 0.965,
+            "log_loss": 0.693
+          },
+          "native": {
+            "accuracy": 0.958,
+            "log_loss": 0.115
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.996,
+          "divergence_mean": 0.318,
+          "divergence_sd": 0.091,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.846,
+          "expanded_proxy": 0.295,
+          "native": 0.839
+        },
+        "flip_prob_proxy": 0.05,
+        "m": 3,
+        "seed": 4
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.25,
+          "direct": {
+            "accuracy": 0.957,
+            "log_loss": 0.169
+          },
+          "expanded_proxy": {
+            "accuracy": 0.927,
+            "log_loss": 0.878
+          },
+          "native": {
+            "accuracy": 0.932,
+            "log_loss": 0.202
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.999,
+          "divergence_mean": 0.319,
+          "divergence_sd": 0.099,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.904,
+          "expanded_proxy": 0.319,
+          "native": 0.883
+        },
+        "flip_prob_proxy": 0.085,
+        "m": 4,
+        "seed": 0
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.25,
+          "direct": {
+            "accuracy": 0.938,
+            "log_loss": 0.185
+          },
+          "expanded_proxy": {
+            "accuracy": 0.95,
+            "log_loss": 0.613
+          },
+          "native": {
+            "accuracy": 0.912,
+            "log_loss": 0.258
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.999,
+          "divergence_mean": 0.325,
+          "divergence_sd": 0.095,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.862,
+          "expanded_proxy": 0.319,
+          "native": 0.883
+        },
+        "flip_prob_proxy": 0.085,
+        "m": 4,
+        "seed": 1
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.25,
+          "direct": {
+            "accuracy": 0.95,
+            "log_loss": 0.226
+          },
+          "expanded_proxy": {
+            "accuracy": 0.93,
+            "log_loss": 0.926
+          },
+          "native": {
+            "accuracy": 0.922,
+            "log_loss": 0.5
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.998,
+          "divergence_mean": 0.313,
+          "divergence_sd": 0.103,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.902,
+          "expanded_proxy": 0.323,
+          "native": 0.894
+        },
+        "flip_prob_proxy": 0.085,
+        "m": 4,
+        "seed": 2
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.25,
+          "direct": {
+            "accuracy": 0.963,
+            "log_loss": 0.167
+          },
+          "expanded_proxy": {
+            "accuracy": 0.95,
+            "log_loss": 0.673
+          },
+          "native": {
+            "accuracy": 0.923,
+            "log_loss": 0.205
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.997,
+          "divergence_mean": 0.318,
+          "divergence_sd": 0.095,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.889,
+          "expanded_proxy": 0.287,
+          "native": 0.909
+        },
+        "flip_prob_proxy": 0.085,
+        "m": 4,
+        "seed": 3
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.25,
+          "direct": {
+            "accuracy": 0.958,
+            "log_loss": 0.154
+          },
+          "expanded_proxy": {
+            "accuracy": 0.925,
+            "log_loss": 0.99
+          },
+          "native": {
+            "accuracy": 0.93,
+            "log_loss": 0.242
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.998,
+          "divergence_mean": 0.313,
+          "divergence_sd": 0.104,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.891,
+          "expanded_proxy": 0.322,
+          "native": 0.879
+        },
+        "flip_prob_proxy": 0.085,
+        "m": 4,
+        "seed": 4
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.2,
+          "direct": {
+            "accuracy": 0.917,
+            "log_loss": 0.179
+          },
+          "expanded_proxy": {
+            "accuracy": 0.892,
+            "log_loss": 1.751
+          },
+          "native": {
+            "accuracy": 0.877,
+            "log_loss": 0.325
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.991,
+          "divergence_mean": 0.303,
+          "divergence_sd": 0.11,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.843,
+          "expanded_proxy": 0.335,
+          "native": 0.807
+        },
+        "flip_prob_proxy": 0.12,
+        "m": 5,
+        "seed": 0
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.2,
+          "direct": {
+            "accuracy": 0.942,
+            "log_loss": 0.201
+          },
+          "expanded_proxy": {
+            "accuracy": 0.902,
+            "log_loss": 1.446
+          },
+          "native": {
+            "accuracy": 0.912,
+            "log_loss": 0.631
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.995,
+          "divergence_mean": 0.309,
+          "divergence_sd": 0.111,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.842,
+          "expanded_proxy": 0.346,
+          "native": 0.81
+        },
+        "flip_prob_proxy": 0.12,
+        "m": 5,
+        "seed": 1
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.2,
+          "direct": {
+            "accuracy": 0.93,
+            "log_loss": 0.27
+          },
+          "expanded_proxy": {
+            "accuracy": 0.913,
+            "log_loss": 1.722
+          },
+          "native": {
+            "accuracy": 0.9,
+            "log_loss": 0.49
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.997,
+          "divergence_mean": 0.305,
+          "divergence_sd": 0.111,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.86,
+          "expanded_proxy": 0.341,
+          "native": 0.837
+        },
+        "flip_prob_proxy": 0.12,
+        "m": 5,
+        "seed": 2
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.2,
+          "direct": {
+            "accuracy": 0.938,
+            "log_loss": 0.326
+          },
+          "expanded_proxy": {
+            "accuracy": 0.917,
+            "log_loss": 1.14
+          },
+          "native": {
+            "accuracy": 0.888,
+            "log_loss": 0.423
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.996,
+          "divergence_mean": 0.303,
+          "divergence_sd": 0.116,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.787,
+          "expanded_proxy": 0.321,
+          "native": 0.811
+        },
+        "flip_prob_proxy": 0.12,
+        "m": 5,
+        "seed": 3
+      },
+      {
+        "basin_label": {
+          "chance_accuracy": 0.2,
+          "direct": {
+            "accuracy": 0.915,
+            "log_loss": 0.296
+          },
+          "expanded_proxy": {
+            "accuracy": 0.885,
+            "log_loss": 2.04
+          },
+          "native": {
+            "accuracy": 0.87,
+            "log_loss": 0.68
+          }
+        },
+        "complexity": {
+          "basin_entropy_norm": 0.999,
+          "divergence_mean": 0.303,
+          "divergence_sd": 0.115,
+          "near_boundary_fraction_proxy": 0.25
+        },
+        "divergence_nrmse": {
+          "direct": 0.846,
+          "expanded_proxy": 0.324,
+          "native": 0.827
+        },
+        "flip_prob_proxy": 0.12,
+        "m": 5,
+        "seed": 4
+      }
+    ],
+    "slope_gate_note": "A pass means expanded-proxy basin access stays above native/chance and does not improve with complexity; exact monotonic degradation is exploratory.",
+    "slope_gate_passed": false
+  },
+  "proof_ladder": {
+    "S0": {
+      "direct": 0.105,
+      "name": "sanity",
+      "passed": true,
+      "uninformative": 1.001
+    },
+    "S1": {
+      "k16": 0.389,
+      "k2": 0.571,
+      "name": "distinction-dependence",
+      "passed": true
+    },
+    "S2": {
+      "delta": 0.0,
+      "name": "throughput-invariance",
+      "passed": true,
+      "thru1x": 0.441,
+      "thru8x": 0.441
+    },
+    "S3": {
+      "hi_throughput_lo_k": 0.596,
+      "lo_throughput_hi_k": 0.429,
+      "name": "wrong-lever",
+      "passed": true
+    },
+    "S4": {
+      "delta0": 0.433,
+      "delta0_5": 0.841,
+      "delta1": 0.934,
+      "name": "corruption-decay",
+      "passed": true
+    },
+    "S5": {
+      "expanded": 0.538,
+      "name": "additive-access-proxy",
+      "native_only": 0.544,
+      "passed": false,
+      "sham": 0.544
+    },
+    "S6": {
+      "direct": 0.105,
+      "name": "shared-placement-proxy",
+      "passed": true,
+      "symbolic": 0.509,
+      "trained_proxy": 0.418
+    },
+    "S7": {
+      "name": "linear-dimensionality-slope-proxy",
+      "note": "A fail here can be informative: linear systems may not become harder as dimensions are added.",
+      "passed": false,
+      "slope": {
+        "4D": {
+          "above_ctrl": true,
+          "control": 1.001,
+          "trained": 0.405
+        },
+        "6D": {
+          "above_ctrl": true,
+          "control": 1.002,
+          "trained": 0.318
+        },
+        "8D": {
+          "above_ctrl": true,
+          "control": 1.002,
+          "trained": 0.298
+        }
+      }
+    },
+    "S8": {
+      "disagreement_error_corr": 0.354,
+      "name": "multi-codec-audit-proxy",
+      "passed": true
+    }
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "codec_contest": {
+    "codec_robustness": {
+      "grounded_recovery_auc_mean": 0.482,
+      "grounded_structural_robustness_mean": 0.285,
+      "interpretation": "robustness is useful recovery retained across k, not mere flatness",
+      "per_seed": [
+        {
+          "codec_ladder_k": [
+            16,
+            8,
+            4,
+            2
+          ],
+          "grounded_channel": {
+            "collapse_high_to_low": 0.223,
+            "graceful_degradation_conditional": 0.597,
+            "nrmse": {
+              "16": 0.448,
+              "2": 0.671,
+              "4": 0.56,
+              "8": 0.482
+            },
+            "recovery_auc": 0.461,
+            "recovery_rho": {
+              "16": 0.553,
+              "2": 0.33,
+              "4": 0.442,
+              "8": 0.519
+            },
+            "structural_robustness": 0.275
+          },
+          "rho_auc_gap_grounded_minus_uninformative": 0.436,
+          "seed": 0,
+          "uninformative_baseline_nrmse": 1.002,
+          "uninformative_or_fluency_only_channel": {
+            "collapse_high_to_low": 0.016,
+            "graceful_degradation_conditional": 0.0,
+            "nrmse": {
+              "16": 0.972,
+              "2": 0.988,
+              "4": 0.979,
+              "8": 0.968
+            },
+            "recovery_auc": 0.025,
+            "recovery_rho": {
+              "16": 0.03,
+              "2": 0.014,
+              "4": 0.023,
+              "8": 0.034
+            },
+            "structural_robustness": 0.0
+          }
+        },
+        {
+          "codec_ladder_k": [
+            16,
+            8,
+            4,
+            2
+          ],
+          "grounded_channel": {
+            "collapse_high_to_low": 0.249,
+            "graceful_degradation_conditional": 0.588,
+            "nrmse": {
+              "16": 0.397,
+              "2": 0.648,
+              "4": 0.53,
+              "8": 0.427
+            },
+            "recovery_auc": 0.502,
+            "recovery_rho": {
+              "16": 0.605,
+              "2": 0.356,
+              "4": 0.473,
+              "8": 0.576
+            },
+            "structural_robustness": 0.296
+          },
+          "rho_auc_gap_grounded_minus_uninformative": 0.469,
+          "seed": 1,
+          "uninformative_baseline_nrmse": 1.007,
+          "uninformative_or_fluency_only_channel": {
+            "collapse_high_to_low": 0.032,
+            "graceful_degradation_conditional": 0.0,
+            "nrmse": {
+              "16": 0.959,
+              "2": 0.991,
+              "4": 0.978,
+              "8": 0.963
+            },
+            "recovery_auc": 0.033,
+            "recovery_rho": {
+              "16": 0.047,
+              "2": 0.015,
+              "4": 0.028,
+              "8": 0.043
+            },
+            "structural_robustness": 0.0
+          }
+        }
+      ],
+      "rho_auc_gap_mean": 0.453,
+      "uninformative_recovery_auc_mean": 0.029,
+      "uninformative_structural_robustness_mean": 0.0
+    },
+    "multi_codec_audit": {
+      "all_seeds_clear_permutation_null": true,
+      "auc_for_top10pct_error": 0.897,
+      "catch_rate_top10pct_error_at_top25pct_disagreement": 0.85,
+      "corr_disagreement_vs_ensemble_error": 0.681,
+      "corr_disagreement_vs_ensemble_error_sd": 0.011,
+      "flag_precision": 0.34,
+      "interpretation": "positive-control audit: disagreement should rise with true error and enrich worst-error cases",
+      "loco_disagreement_vs_held_codec_error_corr": 0.559,
+      "mean_error_by_disagreement_quartile": [
+        0.402,
+        0.535,
+        0.679,
+        1.03
+      ],
+      "mean_pairwise_codec_error_correlation": 0.562,
+      "per_seed": [
+        {
+          "auc_for_top10pct_error": 0.891,
+          "catch_rate_top10pct_error_at_top25pct_disagreement": 0.9,
+          "clears_permutation_null": true,
+          "codecs": [
+            "native-stats",
+            "coupling+native",
+            "direct-downsample",
+            "symbolic(k=4)"
+          ],
+          "corr_bootstrap": {
+            "ci95": [
+              0.63,
+              0.773
+            ],
+            "mean": 0.69
+          },
+          "corr_disagreement_vs_ensemble_error": 0.692,
+          "flag_precision": 0.36,
+          "loco_disagreement_vs_held_codec_error_corr": 0.601,
+          "mean_error_by_disagreement_quartile": [
+            0.395,
+            0.484,
+            0.686,
+            1.076
+          ],
+          "mean_pairwise_codec_error_correlation": 0.616,
+          "per_codec_mean_std_error": {
+            "coupling+native": 0.735,
+            "direct-downsample": 0.505,
+            "native-stats": 0.872,
+            "symbolic(k=4)": 1.068
+          },
+          "permutation_null_p95": 0.193,
+          "random_catch_baseline": 0.25,
+          "seed": 0
+        },
+        {
+          "auc_for_top10pct_error": 0.903,
+          "catch_rate_top10pct_error_at_top25pct_disagreement": 0.8,
+          "clears_permutation_null": true,
+          "codecs": [
+            "native-stats",
+            "coupling+native",
+            "direct-downsample",
+            "symbolic(k=4)"
+          ],
+          "corr_bootstrap": {
+            "ci95": [
+              0.559,
+              0.78
+            ],
+            "mean": 0.677
+          },
+          "corr_disagreement_vs_ensemble_error": 0.67,
+          "flag_precision": 0.32,
+          "loco_disagreement_vs_held_codec_error_corr": 0.518,
+          "mean_error_by_disagreement_quartile": [
+            0.409,
+            0.587,
+            0.673,
+            0.985
+          ],
+          "mean_pairwise_codec_error_correlation": 0.508,
+          "per_codec_mean_std_error": {
+            "coupling+native": 0.701,
+            "direct-downsample": 0.429,
+            "native-stats": 0.893,
+            "symbolic(k=4)": 1.118
+          },
+          "permutation_null_p95": 0.229,
+          "random_catch_baseline": 0.25,
+          "seed": 1
+        }
+      ],
+      "permutation_null_p95": 0.211,
+      "random_catch_baseline": 0.25
+    }
+  },
+  "config": {
+    "T": 8.0,
+    "delta_eq": 0.04,
+    "drive_amp": 0.3,
+    "drive_w": 0.7,
+    "dt": 0.08,
+    "eff_floor": 0.02,
+    "estimator": "ridge",
+    "mlp_hidden": [
+      48
+    ],
+    "mlp_iter": 80,
+    "n_boot": 60,
+    "n_test": 100,
+    "n_train": 240,
+    "ridge_alpha": 1.0,
+    "seeds": [
+      0,
+      1
+    ]
+  },
+  "proof_ladder": {
+    "S0": {
+      "direct": 0.209,
+      "name": "sanity",
+      "passed": true,
+      "per_target_labels": [
+        "spring1",
+        "spring2",
+        "coupling_g",
+        "damping_c"
+      ],
+      "per_target_nrmse": [
+        0.02,
+        0.336,
+        0.015,
+        0.558
+      ],
+      "uninformative": 1.004
+    },
+    "S1": {
+      "k16": 0.423,
+      "k2": 0.66,
+      "name": "distinction-dependence",
+      "passed": true
+    },
+    "S2": {
+      "delta": 0.002,
+      "name": "throughput-invariance",
+      "passed": true,
+      "thru1x": 0.522,
+      "thru8x": 0.521
+    },
+    "S3": {
+      "hi_throughput_lo_k": 0.696,
+      "lo_throughput_hi_k": 0.501,
+      "name": "wrong-lever",
+      "passed": true
+    },
+    "S4": {
+      "delta0": 0.4,
+      "delta0_5": 0.814,
+      "delta1": 0.961,
+      "name": "corruption-decay",
+      "passed": true
+    },
+    "S5": {
+      "coupling_has_unique_signal": false,
+      "coupling_on_native_residual_nrmse": 0.985,
+      "expanded": 0.447,
+      "name": "additive-access-proxy",
+      "native_only": 0.478,
+      "passed": true,
+      "sham": 0.478
+    },
+    "S6": {
+      "direct": 0.209,
+      "name": "shared-placement-proxy",
+      "passed": true,
+      "symbolic": 0.622,
+      "trained_proxy": 0.483
+    },
+    "S7": {
+      "name": "linear-dimensionality-slope-proxy",
+      "note": "A fail here can be informative: linear systems may not become harder as dimensions are added.",
+      "passed": false,
+      "slope": {
+        "4D": {
+          "above_ctrl": true,
+          "control": 1.004,
+          "trained": 0.454
+        },
+        "6D": {
+          "above_ctrl": true,
+          "control": 1.01,
+          "trained": 0.329
+        },
+        "8D": {
+          "above_ctrl": true,
+          "control": 1.007,
+          "trained": 0.293
+        }
+      }
+    },
+    "S8": {
+      "disagreement_error_corr": 0.332,
+      "name": "multi-codec-audit-proxy",
+      "passed": true
+    }
+  }
+}

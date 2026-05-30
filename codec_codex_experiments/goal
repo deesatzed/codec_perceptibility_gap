@@ -1,0 +1,49 @@
+/goal
+
+You are Codex running this repo locally for the Perceptibility Gap / CodecGuard / CodecBench experiments.
+
+Mission
+- Run the provided simulation experiments end-to-end.
+- Produce a concise, evidence-grounded report of what passed, failed, and what should be changed next.
+- Do not inflate the claims: these are local software/simulation smoke tests and design-validity checks, not human-subject or LLM-confirmatory evidence unless you explicitly run those additions.
+
+Primary commands
+1. Install dependencies:
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+
+2. Run smoke tests:
+   pytest -q
+
+3. Run the demo-scale full bundle:
+   python -m src.run_all --config configs/demo.json --out results/demo
+
+4. Optional larger run, only if resources/time allow:
+   python -m src.run_all --config configs/confirmatory_local.json --out results/confirmatory_local
+
+Report requirements
+- Create or update results/<run_name>/report.md.
+- Include:
+  1. machine/environment summary,
+  2. exact commands run,
+  3. proof-ladder stage table with PASS/FAIL and metrics,
+  4. CodecGuard metrics: disagreement-error correlation, AUC for top-error detection, catch-rate, quartile calibration, and codec-error correlation,
+  5. CodecBench metrics: recovery/rho curve, AUC gap, and collapse/graceful-degradation interpretation,
+  6. magnetic-pendulum stress-test table: direct/native/expanded accuracy or log-loss by magnet count, divergence nRMSE, and complexity diagnostics,
+  7. any failed gate and whether it is a design failure, medium failure, or expected boundary condition,
+  8. concrete next patch suggestions.
+
+Decision rules
+- Treat the proof-ladder as a developmental smoke test. Do not describe it as confirmatory evidence.
+- Treat the magnetic pendulum as a nonlinear stress test / source-family extension, not as proof of horizon access.
+- Keep the Lyapunov-time discipline: do not use long-horizon exact-path prediction as a discriminating metric in chaotic systems.
+- If a gate fails, report the failure. Do not tune thresholds after seeing the result unless you label the change exploratory.
+- If correlated errors are high in CodecGuard, explicitly warn that multi-codec agreement may be overconfident.
+- If code changes are needed, keep defaults small enough for a local M4 machine and put scaling knobs in configs.
+
+Definition of done
+- pytest passes.
+- results/<run_name>/results.json exists.
+- results/<run_name>/report.md exists and contains the required tables and interpretation.
+- Any plots generated under results/<run_name>/figures are referenced from report.md.
