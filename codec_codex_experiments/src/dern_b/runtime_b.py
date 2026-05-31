@@ -38,7 +38,7 @@ class DERNBRuntime:
     def __init__(self, epsilon: float = 0.4, audit_prob: float = 1.0,
                  max_tokens: int = 64, seed: int = 0,
                  cheap_path: str = CHEAP_PATH, ref_path: str = REF_PATH,
-                 metric: str = "token_f1") -> None:
+                 metric: str = "token_f1", audit_every_replay: bool = True) -> None:
         self.cheap = MLXModel(cheap_path)
         self.ref = MLXModel(ref_path)
         self.controller = OnlineController(actions=["cheap", "reference"], seed=seed, epsilon=0.15)
@@ -48,6 +48,13 @@ class DERNBRuntime:
         self.audit_prob = float(audit_prob)
         self.max_tokens = int(max_tokens)
         self.metric = metric
+        # ultrathink fix (cross-prompt replay attribution): when True, EVERY
+        # served-cheap route is audited against the reference for ITS OWN prompt,
+        # so a saving can never be booked on the strength of a different prompt's
+        # audit (the region-key collision exploit). This makes *measured* replay
+        # savings ~0 (audit runs both models); steady-state savings are recovered
+        # as an explicitly-labeled projection elsewhere. Default True = honest.
+        self.audit_every_replay = bool(audit_every_replay)
         self.ledger: List[Dict[str, Any]] = []
         self._rng = np.random.default_rng(seed)
 
@@ -75,7 +82,7 @@ class DERNBRuntime:
             cheap_gen = self.cheap.generate(prompt, self.max_tokens)
             # Audit policy: untrusted region OR sampled trusted region -> run reference.
             trusted = edge is not None and edge.proof == "bounded"
-            do_audit = (not trusted) or (self._rng.random() < self.audit_prob)
+            do_audit = (not trusted) or self.audit_every_replay or (self._rng.random() < self.audit_prob)
             if do_audit:
                 ref_gen = self.ref.generate(prompt, self.max_tokens)
                 verdict = verify_against_reference(cheap_gen.text, ref_gen.text, self.epsilon, self.metric)
@@ -135,6 +142,11 @@ class DERNBRuntime:
             "cost": served_cv, "baseline_cost": baseline_cv,
             "token_savings": tok_save, "aps_savings": aps_save, "latency_savings": lat_save,
             "forced_ref": forced_ref,
+            # per-prompt audit truth for honest comparison accounting (ultrathink):
+            "replay_route": bool(edge is not None and not forced_ref),
+            "cheap_agreed_this_prompt": (verdict.passed if verdict is not None else None),
+            "this_prompt_ref_aps": (float(ref_gen.active_param_seconds) if ref_gen is not None else None),
+            "this_prompt_cheap_aps": (float(cheap_gen.active_param_seconds) if proposed == "cheap" else None),
         }
         self.ledger.append(rec)
         return rec
