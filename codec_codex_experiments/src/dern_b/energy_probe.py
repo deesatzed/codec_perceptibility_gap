@@ -11,9 +11,11 @@ Method (hardened after a method audit; see results/dern_stage_b_energy_method.md
 - Parse only the explicit per-component lines we recognize (CPU/GPU/ANE Power in
   mW) via a strict regex. SUM components per sample; explicitly IGNORE any
   'Combined'/total line to avoid double counting.
-- Energy = sum over samples of (component_power_W * interval_seconds), i.e. a
-  proper Riemann sum with the known sampling interval as each sample's weight —
-  NOT avg_power * wall_clock (which mis-aligns the sampling window).
+- Energy = mean component power over the captured samples x the ACTUAL work
+  window (work_seconds). Under the uniform fixed-interval sampling powermetrics
+  uses, this equals the Riemann sum sum(power_i * interval) whenever the samples
+  span the window — which the coverage gate (>=60%, see below) enforces. If
+  coverage is low the reading is rejected as 'unavailable' rather than stretched.
 - Report BOTH total-system energy during the call and idle-subtracted energy
   (active minus a measured idle baseline), clearly labeled. Total-system power is
   not attributable to the model alone; idle-subtracted is the better proxy.
