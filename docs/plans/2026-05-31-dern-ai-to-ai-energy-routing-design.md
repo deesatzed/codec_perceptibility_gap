@@ -338,6 +338,41 @@ per-input inference routing (tier + learned stop) jointly with a broad
 thermal/DVFS/carbon envelope, refereed by an unmodifiable dual-lane verifier,
 backed by an energy-indexed experience graph. Re-verify before any filing/publication.
 
+### 6.1 Prior-art re-check delta (2026-05-31)
+
+A fresh re-check found work newer than the original survey that **narrows** the
+claim. The combination of all four legs still has no single prior match, but:
+
+- **RETIRED FRAMING:** "no learned joint compute+cooling controller exists" is now
+  **false**. **MARLIN (arXiv 2605.13496, 2026-05-13)** is a multi-agent RL
+  controller for sustainable LLM inference (TTFT + carbon + water + energy). It
+  must be cited and distinguished: it controls *geo-distributed request
+  scheduling* (which datacenter), not *per-input* tier/routing; its cooling is
+  *derived from a fixed COP*, not co-learned; it has no stop signal, no verifier,
+  no experience graph; it updates per 15-min epoch.
+- **Leg 1 (co-learn tier + stop) — holds, narrowed.** **LYNX (arXiv 2512.05325)**
+  learns an online confidence-controlled *stop* (early-exit); other 2026 work
+  learns *routing*. None co-learns *both* in one online controller. Must argue
+  explicitly against LYNX + a learned router.
+- **Leg 2 (verifier-as-governor) — holds, strongest.** No 2026 work uses a
+  verifier as the safety governor of a routing/stop policy; speculative decoding
+  remains framed as acceleration, DiFR as fraud detection.
+- **Leg 3 (energy-indexed experience graph) — holds, strongest.** Only KV-cache /
+  expert-activation caching found; no memory of *proven-safe energy configs keyed
+  by input region*.
+- **Leg 4 (broad envelope under one learned policy) — holds, narrowed by MARLIN.**
+  Differentiators narrow to: per-input granularity, race-to-idle, and cooling/DVFS
+  *co-learned in the same online policy*.
+
+**Mandatory new citations:** MARLIN (2605.13496), LYNX (2512.05325),
+Energy-Aware Routing to LRMs (2601.00823); neighbors: R2-Reasoner (WWW'26),
+Cost-Aware Model Orchestration (2512.01099), ZIP-RC (2512.01457).
+
+**Re-anchored claim:** the inseparable combination of **per-input routing +
+co-learned stop + unmodifiable dual-lane verifier + energy-indexed experience
+graph**, with Legs 2 and 3 as the wide-open core differentiators. Re-verify
+again immediately before any external/measured-energy claim.
+
 ---
 
 ## 7. Next step
