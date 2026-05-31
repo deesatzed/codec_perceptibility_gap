@@ -21,3 +21,28 @@ REASONING = [
 ]
 
 ALL_PROMPTS = FACTUAL + REASONING
+
+
+# A stream with REPEATED distinction-regions, so the experience graph fills and
+# replay (amortized audit) actually engages. Many of these share a probe key
+# (short factual), which is the whole point: the first hit in a region audits;
+# later hits in the same region replay the cheap route without re-auditing.
+REPEATED_REGION_STREAM = [
+    "What is the capital of France? One word.",
+    "What is the capital of Japan? One word.",
+    "What is the capital of Italy? One word.",
+    "What is the capital of Spain? One word.",
+    "What is the capital of Germany? One word.",
+    "What is 2 plus 2? Just the number.",
+    "What is 3 plus 5? Just the number.",
+    "What is 7 minus 4? Just the number.",
+    "What is 6 times 2? Just the number.",
+    "What is 10 divided by 2? Just the number.",
+    "Name the largest planet. One word.",
+    "Name the closest planet to the sun. One word.",
+    "Name the red planet. One word.",
+    "What color is grass? One word.",
+    "What color is the sun? One word.",
+    "What color is snow? One word.",
+]
+
