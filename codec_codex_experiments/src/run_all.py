@@ -11,6 +11,7 @@ from .proof_ladder import load_config, run_ladder
 from .codec_contest import run_codec_contest
 from .magnetic_pendulum import run_magnetic_slope
 from .cross_family import run_cross_family
+from .bridging_validation import run_bridging_validation
 from .report import environment_summary, write_report
 
 
@@ -50,6 +51,12 @@ def main() -> int:
     if sources and len(sources) > 1:
         print(f"Running cross-family generalization over {sources}")
         results["cross_family"] = run_cross_family(cfg)
+
+    # Bridging validation (critic1 #2): ridge vs proposed-confirmatory MLP on the
+    # exposed developmental families, to derisk the estimator-class blind spot.
+    # Never touches the reserved confirmatory holdout.
+    print("Running bridging validation (ridge vs mlp ceiling / margin sensitivity)")
+    results["bridging_validation"] = run_bridging_validation(cfg)
 
     results_path = outdir / "results.json"
     results_path.write_text(json.dumps(results, indent=2, sort_keys=True), encoding="utf-8")

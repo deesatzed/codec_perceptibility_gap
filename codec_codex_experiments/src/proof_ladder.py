@@ -439,7 +439,50 @@ def run_ladder(raw_cfg: Dict[str, Any] | None = None, source: Any = None) -> Dic
     corr = avg(s8, cfg)
     rep["S8"] = dict(name="multi-codec-audit-proxy", disagreement_error_corr=corr, passed=bool(corr > 0.20))
 
+    # critic1 #1: parallel verification tracks. The S0..S8 gates were reported
+    # as a single serial chain, so a design quirk in one middle gate (e.g. S7's
+    # dimensionality slope) read as compromising orthogonal gates downstream
+    # (e.g. S8's multi-codec audit). The gate THRESHOLDS are unchanged; this
+    # only re-groups the same per-gate results into three independent lanes so a
+    # failing lane cannot marginalize an unrelated one.
+    rep["tracks"] = _verification_tracks(rep)
+
     return _round(rep)
+
+
+# critic1 #1: lane assignment. Lanes are orthogonal; a lane PASSES iff every
+# gate in it passes, and lanes are evaluated independently of each other.
+VERIFICATION_TRACKS: Dict[str, Dict[str, Any]] = {
+    "information_theoretic": {
+        "gates": ["S0", "S1", "S2", "S3"],
+        "description": "baseline recoverability, distinction-dependence, throughput-invariance, wrong-lever",
+    },
+    "complexity_scaling": {
+        "gates": ["S4", "S6", "S7"],
+        "description": "corruption decay, shared rate-distortion placement, dimensionality slope",
+    },
+    "auditability_verification": {
+        "gates": ["S5", "S8"],
+        "description": "additive hidden-variable access, multi-codec disagreement audit (CodecGuard)",
+    },
+}
+
+
+def _verification_tracks(rep: Dict[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {}
+    for lane, spec in VERIFICATION_TRACKS.items():
+        gates = spec["gates"]
+        per_gate = {g: bool(rep.get(g, {}).get("passed", False)) for g in gates}
+        n_pass = sum(per_gate.values())
+        out[lane] = {
+            "gates": gates,
+            "description": spec["description"],
+            "per_gate_passed": per_gate,
+            "n_passed": n_pass,
+            "n_gates": len(gates),
+            "lane_passed": bool(n_pass == len(gates)),
+        }
+    return out
 
 
 def format_ladder_table(rep: Dict[str, Any]) -> str:

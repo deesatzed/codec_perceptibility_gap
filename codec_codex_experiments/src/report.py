@@ -134,6 +134,25 @@ def write_report(results: Dict[str, Any], outdir: Path, commands: List[str] | No
     lines.append(_table(["stage", "claim", "gate", "metrics"], rows))
     lines.append("")
 
+    # critic1 #1: parallel verification tracks. The same gates, regrouped into
+    # three orthogonal lanes so a failing lane does not marginalize an unrelated one.
+    tracks = ladder.get("tracks")
+    if tracks:
+        lines.append("### 1a. Parallel verification tracks (decoupled lanes)")
+        track_rows = []
+        for lane, t in tracks.items():
+            track_rows.append([
+                lane,
+                ", ".join(t.get("gates", [])),
+                "PASS" if t.get("lane_passed") else "FAIL",
+                f"{t.get('n_passed')}/{t.get('n_gates')}",
+                t.get("description", ""),
+            ])
+        lines.append(_table(["lane", "gates", "lane gate", "passed", "scope"], track_rows))
+        lines.append("")
+        lines.append("Lanes are evaluated independently: a quirk in the complexity/scaling lane (e.g. the S7 dimensionality slope) does not invalidate the orthogonal auditability lane (S5/S8). Gate thresholds are unchanged from the serial ladder; only the grouping differs.")
+        lines.append("")
+
     lines.append("## 2. CodecGuard: multi-codec consistency audit")
     audit = results.get("codec_contest", {}).get("multi_codec_audit", {})
     audit_rows = [[k, v] for k, v in audit.items() if k not in {"per_seed", "interpretation"}]
@@ -197,6 +216,59 @@ def write_report(results: Dict[str, Any], outdir: Path, commands: List[str] | No
         lines.append(f"**Failing on all families:** {', '.join(gm.get('failing_on_all_families', [])) or 'none'}")
         lines.append("")
         lines.append("Interpretation: family-robust gates demonstrate the measurement logic generalizes beyond the single linear calibration source. A gate failing on all families is an honest negative; thresholds were not tuned per family.")
+        lines.append("")
+
+        # critic1 #3: CodecGuard audit survival on each family, including the
+        # non-oscillatory chaotic family. This is the headline cross-family test.
+        survival = xf.get("codecguard_audit_survival", {})
+        if survival:
+            lines.append("### 5a. CodecGuard audit survival across dynamical classes")
+            srows = []
+            for fam, s in survival.items():
+                srows.append([
+                    fam,
+                    s.get("naive_corr"),
+                    s.get("loco_corr"),
+                    s.get("all_seeds_clear_permutation_null"),
+                    s.get("catch_rate"),
+                    s.get("random_catch_baseline"),
+                    "YES" if s.get("audit_signal_survives") else "NO",
+                ])
+            lines.append(_table(
+                ["family", "naive corr", "LOCO corr", "clears null (all seeds)", "catch rate", "catch baseline", "audit survives"],
+                srows,
+            ))
+            lines.append("")
+            lines.append("`henon_map` is a discrete-time chaotic family with no continuous momentum or periodic-attractor symmetry (critic1 #3). The hardened **LOCO** correlation and the worst-error **catch rate** are the physics-independent survival signals; the naive correlation and the permutation-null clearance can degrade on the chaotic family, and that degradation is reported as-is rather than tuned away. Chaos parameters themselves are largely unrecoverable from coarse orbit statistics (sensitive dependence), so the ladder's parameter-recovery gates fail on `henon_map` by construction -- a real limit of auditing alien dynamics, not a pipeline defect.")
+            lines.append("")
+
+    bv = results.get("bridging_validation")
+    if bv:
+        lines.append("## 6. Bridging validation: estimator-class sensitivity (critic1 #2)")
+        lines.append("")
+        lines.append("Ridge (developmental) vs MLP (proposed confirmatory) on the **exposed developmental families only** -- the reserved confirmatory holdout is never read (`holdout_touched = " + str(bv.get("holdout_touched")) + "`). This anchors a provisional machine ceiling and tests whether the throughput-invariance band `delta_eq = " + str(bv.get("delta_eq")) + "` is sensitive to estimator class before any pre-registration freeze.")
+        lines.append("")
+        bv_rows = []
+        for fam, v in bv.get("per_family", {}).items():
+            be = v.get("by_estimator", {})
+            bv_rows.append([
+                fam,
+                be.get("ridge", {}).get("direct_ceiling_mean"),
+                be.get("mlp", {}).get("direct_ceiling_mean"),
+                v.get("ceiling_shift_ridge_to_mlp"),
+                f"{v.get('ceiling_shift_pct')}%",
+                be.get("ridge", {}).get("throughput_delta_max"),
+                be.get("mlp", {}).get("throughput_delta_max"),
+                "YES" if v.get("margin_fragile") else "no",
+            ])
+        lines.append(_table(
+            ["family", "ridge ceiling", "mlp ceiling", "shift", "shift %", "ridge thru-delta max", "mlp thru-delta max", "margin fragile"],
+            bv_rows,
+        ))
+        lines.append("")
+        lines.append(f"**Any margin fragile:** {bv.get('any_margin_fragile')} — **max abs ceiling shift:** {bv.get('max_abs_ceiling_shift')}")
+        lines.append("")
+        lines.append("Interpretation: where `margin fragile = YES`, upgrading from the developmental ridge estimator to the confirmatory MLP either flips whether the throughput-invariance delta stays inside `delta_eq` or moves it by more than half the band. For those families, `delta_eq` must be re-derived from the confirmatory estimator's empirical floor rather than carried over from ridge. This derisks the architecture upgrade without breaking the confirmatory holdout/blinding.")
         lines.append("")
 
     if figs:
