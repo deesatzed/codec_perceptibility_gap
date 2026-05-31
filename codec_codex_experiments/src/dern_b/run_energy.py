@@ -38,22 +38,27 @@ def main() -> int:
     print("\n--- parser sees these per-sample component sums (Watts) ---")
     print(_component_power_samples(raw))
 
-    print("\n=== measured energy over ONE real cascade route ===")
+    print("\n=== measured energy over a BATCH of real cascade routes ===")
+    print("(batched so the work window spans several seconds; a single 0.27s route")
+    print(" is shorter than one 200ms sample and would be noise-dominated.)")
     rt = DERNBRuntime(epsilon=0.5, audit_prob=1.0, max_tokens=256, seed=0)
-    prompt = FACTUAL[0]
-    rec_holder = {}
+    holder = {}
 
-    def one_route():
-        rec_holder["rec"] = rt.route(prompt)
-        return rec_holder["rec"]
+    def batch():
+        recs = [rt.route(p) for p in FACTUAL]
+        holder["recs"] = recs
+        return recs
 
-    _, reading = measure_energy(one_route, interval_ms=200, idle_samples=5)
-    print(json.dumps({
-        "prompt": prompt,
-        "served": rec_holder.get("rec", {}).get("served"),
-        "wall_seconds": rec_holder.get("rec", {}).get("cost", {}).get("wall_seconds"),
-        "energy": {
+    _, reading = measure_energy(batch, interval_ms=200, idle_samples=5)
+    recs = holder.get("recs", [])
+    n = max(len(recs), 1)
+    served_cheap = sum(1 for r in recs if r["served"] == "cheap")
+    out = {
+        "n_routes": len(recs),
+        "cheap_served": served_cheap,
+        "energy_for_batch": {
             "source": reading.source,
+            "work_seconds": reading.work_seconds,
             "joules_total": reading.joules_total,
             "joules_idle_subtracted": reading.joules_idle_subtracted,
             "avg_watts_active": reading.avg_watts_active,
@@ -62,7 +67,10 @@ def main() -> int:
             "n_idle_samples": reading.n_idle_samples,
             "note": reading.note,
         },
-    }, indent=2))
+    }
+    if reading.joules_idle_subtracted is not None and len(recs):
+        out["per_route_joules_idle_subtracted_mean"] = round(reading.joules_idle_subtracted / n, 3)
+    print(json.dumps(out, indent=2))
     return 0
 
 

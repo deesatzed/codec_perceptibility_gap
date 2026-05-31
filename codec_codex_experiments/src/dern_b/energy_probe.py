@@ -99,6 +99,7 @@ class EnergyReading:
     n_active_samples: int
     n_idle_samples: int
     interval_s: float
+    work_seconds: Optional[float]
     source: str  # "measured" | "unavailable"
     note: str
 
@@ -115,7 +116,7 @@ def measure_energy(fn: Callable[[], Any], interval_ms: int = 200,
     interval_s = interval_ms / 1000.0
     if not sudo_available():
         return fn(), EnergyReading(None, None, None, None, 0, 0, interval_s,
-                                   "unavailable", "sudo not primed")
+                                   None, "unavailable", "sudo not primed")
 
     # 1) idle baseline (no model work)
     try:
@@ -137,6 +138,7 @@ def measure_energy(fn: Callable[[], Any], interval_ms: int = 200,
     try:
         result = fn()
     finally:
+        work_seconds = time.time() - t0          # the ACTUAL work window
         time.sleep(interval_s)  # let the final in-flight sample flush
         proc.terminate()
         try:
@@ -148,15 +150,23 @@ def measure_energy(fn: Callable[[], Any], interval_ms: int = 200,
 
     if not active:
         return result, EnergyReading(None, None, None, avg_idle,
-                                     0, len(idle), interval_s, "unavailable",
-                                     "no recognized active samples parsed")
+                                     0, len(idle), interval_s, round(work_seconds, 4),
+                                     "unavailable", "no recognized active samples parsed")
 
-    # proper Riemann sum: each sample represents one interval of energy
-    joules_total = sum(p * interval_s for p in active)
+    # Energy = average measured power over the active window x the ACTUAL work
+    # duration. We do NOT multiply by (n_samples * interval): powermetrics keeps
+    # sampling in the background after fn() returns, so n_samples * interval
+    # overcounts the window (a flaw the first real reading exposed: 10 samples
+    # ~2s for a 0.27s route -> 7x inflation). avg power is trustworthy; the
+    # correct width is the measured work_seconds.
     avg_active = sum(active) / len(active)
+    # Guard: if the work was far shorter than one sampling interval, the avg is
+    # dominated by idle tail and the reading is not meaningful — say so.
+    too_short = work_seconds < interval_s
+    joules_total = avg_active * work_seconds
     joules_idle_sub = None
     if avg_idle is not None:
-        joules_idle_sub = max(0.0, sum((p - avg_idle) * interval_s for p in active))
+        joules_idle_sub = max(0.0, (avg_active - avg_idle) * work_seconds)
 
     return result, EnergyReading(
         joules_total=round(joules_total, 3),
@@ -166,8 +176,15 @@ def measure_energy(fn: Callable[[], Any], interval_ms: int = 200,
         n_active_samples=len(active),
         n_idle_samples=len(idle),
         interval_s=interval_s,
+        work_seconds=round(work_seconds, 4),
         source="measured",
-        note="component sum (CPU+GPU[+ANE]); total-system power, idle-subtracted is the better model proxy",
+        note=(
+            "energy = avg_measured_power x ACTUAL work_seconds (not n_samples x interval). "
+            "total-system power; idle-subtracted is the better model proxy. "
+            + ("WARNING: work_seconds < one sampling interval -> reading dominated by "
+               "sampling noise; measure a longer batch for a meaningful number."
+               if too_short else "")
+        ),
     )
 
 
