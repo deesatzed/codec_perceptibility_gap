@@ -38,7 +38,7 @@ DERN-B); 3 heavy real-model tests pass when run with `-m heavy`.
 | mean latency savings / request | **17.3 s** | measured (wall-clock) |
 | mean active-param-seconds savings / request | **~1.19e11** | measured (compute proxy) |
 | served worse than reference | **0** | safety invariant held |
-| joules | not measured | `unavailable` (sudo-gated, never faked) |
+| joules (cascade) | **measured** (see Energy section) | `measured` via powermetrics, validated |
 
 **Reading (honest):**
 - On this prompt set, the cheap 6 GB model's answers agreed with the 31B
@@ -52,6 +52,30 @@ DERN-B); 3 heavy real-model tests pass when run with `-m heavy`.
 - The large active-param-seconds figure reflects the ~5x parameter gap (e4b vs
   31B) combined with the reference's much longer reasoning time — it is a
   measured compute proxy, not joules.
+
+## Energy (measured via powermetrics, validated)
+
+Measured in a user-run terminal (sudo can't prompt in the assistant's shell).
+The probe was audited and fixed across three rounds against real output — see
+`results/dern_stage_b_energy_method.md` for the 8 flaws found and fixed (parser
+phantom samples, ~7x window inflation, pipe-truncation, no idle baseline,
+load-vs-inference attribution). Final reading is coverage-validated.
+
+| Quantity | Value |
+|---|---|
+| avg power, active (cascade) | 18.19 W (total system) |
+| avg power, idle baseline | 0.66 W |
+| sample coverage | 89% of the 39.7 s work window (177 samples; >60% guard) |
+| batch energy, idle-subtracted | 695.9 J (6 routes, models pre-warmed) |
+| **per-route mean, idle-subtracted** | **~116 J** |
+
+**Honest scope:** total-system power (not model-only); idle-subtracted is the
+better proxy. Models were pre-warmed so this is *inference* energy, not the
+one-time 21 GB load. This is NOT yet a savings claim vs always-reference — that
+needs an always-31B batch measured under the same probe (clean next step). It
+establishes that the harness produces a *trustworthy measured-joules* number for
+the cascade, with the validity checks (coverage, idle separation, window
+alignment) that the earlier flawed readings (~15.5 J, ~393 J) lacked.
 
 ## Important caveats (do not overread)
 
