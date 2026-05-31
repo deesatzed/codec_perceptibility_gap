@@ -6,12 +6,31 @@ real compute proxy, not a guess.
 """
 from __future__ import annotations
 
+import re
 import time
 from dataclasses import dataclass
 from typing import Optional
 
 CHEAP_PATH = "/Volumes/WS4TB/models/mlx-community/gemma-4-e4b-it-OptiQ-4bit"
 REF_PATH = "/Volumes/WS4TB/models/mlx-community/gemma-4-31B-it-OptiQ-4bit"
+
+# These OptiQ gemma-4 builds emit a harmony-style reasoning channel:
+#   <|channel>thought\n...reasoning...<channel|>FINAL ANSWER
+# The final answer follows the closing channel marker. We extract it so the
+# cascade compares ANSWERS, not reasoning traces. This is output normalization,
+# not answer modification — the model's own final segment is returned verbatim.
+_CHANNEL_CLOSE = re.compile(r"<\s*channel\s*\|?\s*>")
+_THOUGHT_OPEN = re.compile(r"<\|?\s*channel\s*\|?\s*>\s*thought", re.I)
+
+
+def extract_final_answer(text: str) -> str:
+    """Return the post-thinking final answer if the harmony channel is present,
+    else the text unchanged. Always returns the model's own tokens verbatim."""
+    if _THOUGHT_OPEN.search(text):
+        parts = _CHANNEL_CLOSE.split(text)
+        if len(parts) >= 2 and parts[-1].strip():
+            return parts[-1].strip()
+    return text.strip()
 
 
 @dataclass
@@ -62,7 +81,7 @@ class MLXModel:
         gen_tokens = max(1, len(self._tok.encode(text)))
         aps = self.active_params * wall
         return GenResult(
-            text=text.strip(),
+            text=extract_final_answer(text),
             prompt_tokens=int(prompt_tokens),
             gen_tokens=int(gen_tokens),
             wall_seconds=float(wall),
