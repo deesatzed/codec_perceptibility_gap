@@ -41,6 +41,27 @@ Combined Power (CPU + GPU + ANE): 3000 mW
     assert samples == [1.5, 3.0]
 
 
+def test_parser_handles_real_m4_output_with_stray_gpu_lines():
+    # VERBATIM real M4 Pro powermetrics output: blocks start on CPU Power, and
+    # powermetrics interleaves STRAY 'GPU Power' lines outside the block that must
+    # NOT create phantom samples. Only two real samples here.
+    real = """
+CPU Power: 146 mW
+GPU Power: 6 mW
+ANE Power: 0 mW
+Combined Power (CPU + GPU + ANE): 152 mW
+GPU Power: 9 mW
+CPU Power: 77 mW
+GPU Power: 9 mW
+ANE Power: 0 mW
+Combined Power (CPU + GPU + ANE): 86 mW
+GPU Power: 6 mW
+""".strip()
+    samples = _component_power_samples(real)
+    # sample 1 = 146+6+0 = 0.152 W ; sample 2 = 77+9+0 = 0.086 W. Stray GPU lines ignored.
+    assert samples == [0.152, 0.086]
+
+
 def test_parser_returns_empty_on_unrecognized_format():
     # Unknown format -> no samples -> caller returns 'unavailable', never a guess.
     assert _component_power_samples("garbage\nno power lines here\n") == []

@@ -56,10 +56,15 @@ def _run_powermetrics(n_samples: int, interval_ms: int) -> str:
 def _component_power_samples(text: str) -> List[float]:
     """Return a list of per-sample summed component power (Watts).
 
-    powermetrics emits component lines repeatedly (one block per sample). We sum
-    the recognized component lines, then split into per-sample groups: a new
-    sample begins when we see a component label we've already seen since the last
-    flush (i.e. the next 'CPU Power' starts a new block).
+    powermetrics prints one block per sample, each STARTING with a 'CPU Power'
+    line followed by 'GPU Power' and (on Apple Silicon) 'ANE Power'. It also
+    interleaves stray per-cluster 'GPU Power' lines OUTSIDE the block; those must
+    not be treated as new samples. So a new sample begins ONLY on a 'CPU Power'
+    line; GPU/ANE lines accumulate into the current block, and a repeated GPU/ANE
+    before the next CPU is ignored (keep the first, which belongs to the block).
+
+    Verified against real M4 Pro powermetrics output (see
+    results/dern_stage_b_energy_method.md).
     """
     samples: List[float] = []
     cur: Dict[str, float] = {}
@@ -69,10 +74,17 @@ def _component_power_samples(text: str) -> List[float]:
             continue
         comp = m.group(1).upper()
         watts = float(m.group(2)) / 1000.0
-        if comp in cur:  # repeat label -> previous sample block is complete
-            samples.append(sum(cur.values()))
-            cur = {}
-        cur[comp] = watts
+        if comp == "CPU":
+            # CPU line marks the start of a new sample block.
+            if cur:
+                samples.append(sum(cur.values()))
+            cur = {"CPU": watts}
+        else:
+            # GPU/ANE: attach to the current block only if not already set
+            # (ignore stray duplicate cluster lines outside the block).
+            if cur and comp not in cur:
+                cur[comp] = watts
+            # a GPU/ANE line with no open CPU block (stray) is ignored entirely
     if cur:
         samples.append(sum(cur.values()))
     return samples
