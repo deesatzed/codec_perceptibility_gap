@@ -65,3 +65,42 @@ GPU Power: 6 mW
 def test_parser_returns_empty_on_unrecognized_format():
     # Unknown format -> no samples -> caller returns 'unavailable', never a guess.
     assert _component_power_samples("garbage\nno power lines here\n") == []
+
+
+def test_coverage_guard_refuses_to_stretch_sparse_samples(monkeypatch):
+    # If powermetrics captured only a tiny slice of a long work window, the probe
+    # MUST return 'unavailable' (joules None) rather than stretching avg power
+    # over the window. Exercises the real measure_energy coverage branch.
+    import time as _t
+    import src.dern_b.energy_probe as ep
+
+    monkeypatch.setattr(ep, "sudo_available", lambda: True)
+    # idle baseline: a couple of recognizable samples
+    monkeypatch.setattr(ep, "_run_powermetrics",
+                        lambda n, i: "CPU Power: 200 mW\nGPU Power: 0 mW\n" * n)
+    # Stub the file-based powermetrics Popen so no real sudo is needed: we make the
+    # captured file contain only 2 samples while fn sleeps long enough that 2
+    # samples (at interval) cover < 60% of the work window.
+
+    class _FakeProc:
+        pid = 99999
+        def __init__(self, *a, **k):
+            # write 2 samples into the stdout file handle
+            fh = k.get("stdout")
+            if fh is not None:
+                fh.write("CPU Power: 7000 mW\nGPU Power: 0 mW\n"
+                         "CPU Power: 7000 mW\nGPU Power: 0 mW\n")
+        def terminate(self): pass
+        def wait(self, timeout=None): return 0
+
+    monkeypatch.setattr(ep.subprocess, "Popen", _FakeProc)
+
+    def slow_fn():
+        _t.sleep(1.2)   # work window ~1.2s; 2 samples @200ms = 0.4s sampled => 33% < 60%
+        return "done"
+
+    result, reading = ep.measure_energy(slow_fn, interval_ms=200, idle_samples=2)
+    assert result == "done"
+    assert reading.source == "unavailable"
+    assert reading.joules_total is None        # never stretched/fabricated
+    assert "coverage" in reading.note.lower()

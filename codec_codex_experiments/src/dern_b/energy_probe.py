@@ -126,26 +126,45 @@ def measure_energy(fn: Callable[[], Any], interval_ms: int = 200,
         idle = []
     avg_idle = (sum(idle) / len(idle)) if idle else None
 
-    # 2) active window: start powermetrics for enough samples to cover fn, run fn,
-    #    then read what was collected. We size n by a rough estimate and cap it.
+    # 2) active window. We write powermetrics to a FILE (not a pipe) for the whole
+    #    window, so samples are not lost to pipe buffering / terminate truncation
+    #    (a flaw the first real readings exposed: a backgrounded pipe returned only
+    #    ~10 samples for a 53s window). After fn() returns, we stop powermetrics and
+    #    read the file. Energy is integrated over the ACTUAL work window, and only
+    #    the samples that fall within it are used.
+    import tempfile
+    import os
+    import signal
+    tmp = tempfile.NamedTemporaryFile(prefix="pm_", suffix=".txt", delete=False)
+    tmp.close()
     t0 = time.time()
-    # Probe fn duration cheaply is not possible without running it; instead run
-    # powermetrics in the background for a generous sample count and stop after fn.
-    proc = subprocess.Popen(
-        ["sudo", "-n", "powermetrics", "--samplers", "cpu_power,gpu_power", "-i", str(interval_ms)],
-        stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True,
-    )
-    try:
-        result = fn()
-    finally:
-        work_seconds = time.time() - t0          # the ACTUAL work window
-        time.sleep(interval_s)  # let the final in-flight sample flush
-        proc.terminate()
+    with open(tmp.name, "w") as fh:
+        proc = subprocess.Popen(
+            ["sudo", "-n", "powermetrics", "--samplers", "cpu_power,gpu_power", "-i", str(interval_ms)],
+            stdout=fh, stderr=subprocess.DEVNULL, text=True,
+        )
         try:
-            out, _ = proc.communicate(timeout=5)
+            result = fn()
+        finally:
+            work_seconds = time.time() - t0          # the ACTUAL work window
+            time.sleep(interval_s * 1.5)  # let the final sample flush to the file
+            # powermetrics under sudo: terminate the sudo child group.
+            try:
+                proc.terminate()
+                proc.wait(timeout=5)
+            except Exception:
+                try:
+                    subprocess.run(["sudo", "-n", "kill", str(proc.pid)], timeout=3)
+                except Exception:
+                    pass
+    try:
+        with open(tmp.name, "r") as fh:
+            out = fh.read()
+    finally:
+        try:
+            os.unlink(tmp.name)
         except Exception:
-            out = ""
-            proc.kill()
+            pass
     active = _component_power_samples(out)
 
     if not active:
@@ -153,16 +172,25 @@ def measure_energy(fn: Callable[[], Any], interval_ms: int = 200,
                                      0, len(idle), interval_s, round(work_seconds, 4),
                                      "unavailable", "no recognized active samples parsed")
 
-    # Energy = average measured power over the active window x the ACTUAL work
-    # duration. We do NOT multiply by (n_samples * interval): powermetrics keeps
-    # sampling in the background after fn() returns, so n_samples * interval
-    # overcounts the window (a flaw the first real reading exposed: 10 samples
-    # ~2s for a 0.27s route -> 7x inflation). avg power is trustworthy; the
-    # correct width is the measured work_seconds.
-    avg_active = sum(active) / len(active)
-    # Guard: if the work was far shorter than one sampling interval, the avg is
-    # dominated by idle tail and the reading is not meaningful — say so.
+    # Sample-coverage validity: the captured samples must actually span the work
+    # window. If sampled_seconds (n_samples * interval) covers far less than
+    # work_seconds, the avg power is from an unrepresentative slice (e.g. only
+    # model-load) and stretching it over the full window would be fabrication.
+    sampled_seconds = len(active) * interval_s
+    coverage = sampled_seconds / work_seconds if work_seconds > 0 else 0.0
     too_short = work_seconds < interval_s
+    if coverage < 0.6 and not too_short:
+        return result, EnergyReading(
+            None, None, round(sum(active) / len(active), 3),
+            (round(avg_idle, 3) if avg_idle is not None else None),
+            len(active), len(idle), interval_s, round(work_seconds, 4),
+            "unavailable",
+            f"sample coverage {coverage:.0%} of work window — powermetrics did not "
+            f"sample the full {work_seconds:.1f}s; reading would be unrepresentative.",
+        )
+
+    # Energy = average measured power x ACTUAL work_seconds (window-aligned).
+    avg_active = sum(active) / len(active)
     joules_total = avg_active * work_seconds
     joules_idle_sub = None
     if avg_idle is not None:

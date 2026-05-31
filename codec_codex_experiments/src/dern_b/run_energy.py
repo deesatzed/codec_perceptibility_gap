@@ -39,9 +39,16 @@ def main() -> int:
     print(_component_power_samples(raw))
 
     print("\n=== measured energy over a BATCH of real cascade routes ===")
-    print("(batched so the work window spans several seconds; a single 0.27s route")
-    print(" is shorter than one 200ms sample and would be noise-dominated.)")
+    print("(batched for a multi-second window; models PRE-WARMED first so we")
+    print(" measure inference energy, not the one-time 21GB model load.)")
     rt = DERNBRuntime(epsilon=0.5, audit_prob=1.0, max_tokens=256, seed=0)
+
+    # PRE-WARM: force both models to load + run once BEFORE the measured window,
+    # so loading a 21GB model from disk is not attributed to inference energy.
+    print("  pre-warming cheap + reference models (excluded from measurement)...")
+    _ = rt.cheap.generate("warmup", 4)
+    _ = rt.ref.generate("warmup", 4)
+
     holder = {}
 
     def batch():
