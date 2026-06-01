@@ -15,4 +15,7 @@ def pairwise_error_correlation(family_errors: np.ndarray) -> float:
     with np.errstate(invalid="ignore"):
         cm = np.corrcoef(e)
     mask = ~np.eye(cm.shape[0], dtype=bool)
-    return float(np.nanmean(cm[mask]))
+    offdiag = cm[mask]
+    if not np.any(np.isfinite(offdiag)):
+        return float("nan")          # no defined pairwise correlation (all zero-variance)
+    return float(np.nanmean(offdiag))
