@@ -39,3 +39,4 @@ codec_codex_experiments_v0_2.zip
 # CRC answer cache (real generations, regenerable)
 codec_codex_experiments/results/crc_cache.json
 codec_codex_experiments/results/crc_twoarm_cache.json
+codec_codex_experiments/results/crc_twoarm3_cache.json

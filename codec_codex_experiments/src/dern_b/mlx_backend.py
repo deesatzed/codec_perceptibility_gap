@@ -14,22 +14,33 @@ from typing import Optional
 CHEAP_PATH = "/Volumes/WS4TB/models/mlx-community/gemma-4-e4b-it-OptiQ-4bit"
 REF_PATH = "/Volumes/WS4TB/models/mlx-community/gemma-4-31B-it-OptiQ-4bit"
 
-# These OptiQ gemma-4 builds emit a harmony-style reasoning channel:
-#   <|channel>thought\n...reasoning...<channel|>FINAL ANSWER
-# The final answer follows the closing channel marker. We extract it so the
-# cascade compares ANSWERS, not reasoning traces. This is output normalization,
-# not answer modification — the model's own final segment is returned verbatim.
-_CHANNEL_CLOSE = re.compile(r"<\s*channel\s*\|?\s*>")
-_THOUGHT_OPEN = re.compile(r"<\|?\s*channel\s*\|?\s*>\s*thought", re.I)
+# Different model families wrap the answer in different reasoning-trace formats.
+# The final answer is whatever follows the LAST thinking-channel terminator. We
+# strip the trace so downstream comparison sees ANSWERS, not reasoning. This is
+# output normalization — the model's own final segment is returned verbatim.
+#   gemma-4 OptiQ:  <|channel>thought ... <channel|>ANSWER
+#   qwen3.6 OptiQ:  Thinking Process: ... </think>\n\nANSWER
+# Known terminators, tried in order; we take the text after the LAST match.
+_TERMINATORS = [
+    re.compile(r"<\s*channel\s*\|?\s*>"),   # gemma harmony close
+    re.compile(r"</\s*think\s*>", re.I),    # qwen </think>
+    re.compile(r"</\s*thought\s*>", re.I),  # variant
+]
 
 
 def extract_final_answer(text: str) -> str:
-    """Return the post-thinking final answer if the harmony channel is present,
-    else the text unchanged. Always returns the model's own tokens verbatim."""
-    if _THOUGHT_OPEN.search(text):
-        parts = _CHANNEL_CLOSE.split(text)
-        if len(parts) >= 2 and parts[-1].strip():
-            return parts[-1].strip()
+    """Return the post-thinking final answer if a known reasoning-trace terminator
+    is present, else the text unchanged. Always returns the model's own tokens
+    verbatim (we only split on the trace boundary; we never rewrite the answer)."""
+    last_end = -1
+    for term in _TERMINATORS:
+        for mt in term.finditer(text):
+            if mt.end() > last_end:
+                last_end = mt.end()
+    if last_end >= 0:
+        tail = text[last_end:].strip()
+        if tail:
+            return tail
     return text.strip()
 
 
