@@ -99,3 +99,29 @@ class MLXModel:
             active_params=int(self.active_params),
             active_param_seconds=float(aps),
         )
+
+    def option_logprobs(self, user_prompt: str, option_letters: List[str]) -> "np.ndarray":
+        """Log-likelihood MC scoring (the standard, truncation-proof method).
+
+        Returns a normalized probability vector over option_letters = the model's
+        next-token probability for each letter after the chat prompt. No text is
+        generated, so verbose reasoning models cannot derail it. This replaces
+        free-generation + regex parsing, which failed on chatty models.
+        """
+        import numpy as np
+        import mlx.core as mx
+        self._ensure_loaded()
+        msgs = [{"role": "user", "content": user_prompt}]
+        prompt = self._tok.apply_chat_template(msgs, add_generation_prompt=True)
+        ids = mx.array(prompt)[None]
+        logits = self._model(ids)            # (1, seqlen, vocab)
+        last = logits[0, -1, :]
+        # per-letter logit = logit of the letter's FIRST token id (single-token A..J)
+        vals = []
+        for L in option_letters:
+            tid = self._tok.encode(L)
+            vals.append(float(last[tid[-1]]))
+        v = np.asarray(vals, dtype=float)
+        v = v - v.max()                       # softmax over the option set
+        p = np.exp(v)
+        return p / p.sum()
