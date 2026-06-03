@@ -8,13 +8,13 @@ paired per-seed improvement sits inside run-to-run noise (cf. arXiv 2511.19794,
 This is the product: not the statistics (those are standard), but the
 refuse-by-default CONTRACT that withholds the "win" until it's earned.
 
-    python -m src.refuse.examples.example_plus_one_percent
+    python -m claimgate.examples.example_plus_one_percent
 """
 from __future__ import annotations
 
 import numpy as np
 
-from src.refuse import Battery, improvement_beats_noise
+from claimgate import Battery, improvement_beats_noise
 
 
 def _accuracies(true_gain: float, noise: float, n_seeds: int = 10, seed: int = 0):

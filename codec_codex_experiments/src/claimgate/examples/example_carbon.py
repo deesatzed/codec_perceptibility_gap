@@ -8,13 +8,12 @@ deforestation' ratio swings 0.15->0.97 by control choice alone.
 The library encodes the honest verdict: when the additionality estimate is
 explained by the choice of control (the project's loss is INSIDE the spread of
 control losses), refuse to certify a number. Run:
-    python -m src.refuse.examples.example_carbon
+    python -m claimgate.examples.example_carbon
 """
 from __future__ import annotations
 
-import numpy as np
 
-from src.refuse.contract import CheckResult, Battery
+from claimgate import CheckResult, Battery
 
 # Real measured values (carbon_audit/RESULTS.md), post-2011 forest-loss %:
 PROJECT_LOSS = 0.602

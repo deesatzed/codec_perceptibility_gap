@@ -1,5 +1,5 @@
-from src.refuse import Battery, Verified, Refused
-from src.refuse.contract import CheckResult
+from claimgate import Battery, Verified, Refused
+from claimgate import CheckResult
 
 
 def _pass(name="ok"):
@@ -27,7 +27,7 @@ def test_default_is_refuse_not_a_silent_number():
     # Layer-1 enforcement: touching .value on a refusal RAISES (loud, typed),
     # never silently returns None. unwrap() raises; unwrap_or(default) is the out.
     import pytest
-    from src.refuse import RefusedError
+    from claimgate import RefusedError
     r = Battery([_fail()]).evaluate(value=99)
     assert isinstance(r, Refused)
     with pytest.raises(RefusedError):

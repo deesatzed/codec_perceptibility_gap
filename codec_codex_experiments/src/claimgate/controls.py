@@ -19,7 +19,7 @@ Controls:
 """
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List
 
 import numpy as np
 
@@ -51,7 +51,8 @@ def collinearity(control_var: List[float], label: List[float], bound: float = 0.
                  name: str = "collinearity") -> Control:
     """Refuse if |corr(control_var, label)| >= bound (degenerate comparison)."""
     def _check() -> CheckResult:
-        x = np.asarray(control_var, float); y = np.asarray(label, float)
+        x = np.asarray(control_var, float)
+        y = np.asarray(label, float)
         if np.std(x) < 1e-12 or np.std(y) < 1e-12:
             return CheckResult(name, False, "degenerate variance in control or label", {})
         c = abs(float(np.corrcoef(x, y)[0, 1]))
@@ -73,7 +74,8 @@ def _auc(scores: np.ndarray, labels: np.ndarray) -> float:
     ranks = np.empty(len(scores), float)
     ranks[order] = np.arange(1, len(scores) + 1)
     pos = labels > 0
-    n_pos = int(pos.sum()); n_neg = len(labels) - n_pos
+    n_pos = int(pos.sum())
+    n_neg = len(labels) - n_pos
     if n_pos == 0 or n_neg == 0:
         return float("nan")
     return float((ranks[pos].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg))
@@ -84,7 +86,9 @@ def beats_difficulty(signal: List[float], difficulty: List[float], label: List[f
     """Refuse unless the signal predicts the label BETTER than a difficulty-only
     baseline, with a bootstrap CI on the AUC gap strictly above zero."""
     def _check() -> CheckResult:
-        s = np.asarray(signal, float); d = np.asarray(difficulty, float); y = np.asarray(label, float)
+        s = np.asarray(signal, float)
+        d = np.asarray(difficulty, float)
+        y = np.asarray(label, float)
         auc_s, auc_b = _auc(s, y), _auc(d, y)
         if not (np.isfinite(auc_s) and np.isfinite(auc_b)):
             return CheckResult(name, False, "AUC undefined (single-class label)", {})
@@ -115,7 +119,8 @@ def permutation_null(x: List[float], y: List[float], n_perm: int = 500, seed: in
                      name: str = "permutation_null") -> Control:
     """Refuse unless corr(x,y) exceeds its permutation-null 95th percentile."""
     def _check() -> CheckResult:
-        a = np.asarray(x, float); b = np.asarray(y, float)
+        a = np.asarray(x, float)
+        b = np.asarray(y, float)
         if np.std(a) < 1e-12 or np.std(b) < 1e-12:
             return CheckResult(name, False, "degenerate variance", {})
         corr = float(np.corrcoef(a, b)[0, 1])
@@ -139,7 +144,8 @@ def improvement_beats_noise(scores_a: List[float], scores_b: List[float],
     mean gain is not a win if it sits inside run-to-run noise. scores_a/scores_b
     must be PAIRED (same length, aligned units)."""
     def _check() -> CheckResult:
-        a = np.asarray(scores_a, float); b = np.asarray(scores_b, float)
+        a = np.asarray(scores_a, float)
+        b = np.asarray(scores_b, float)
         if a.shape != b.shape or a.size < 2:
             return CheckResult(name, False, "scores must be paired, aligned, length>=2", {})
         delta = b - a

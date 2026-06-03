@@ -45,3 +45,4 @@ codec_codex_experiments/results/agent_skill_audit.json
 
 # carbon_audit fetched public data (regenerable from public sources, large)
 codec_codex_experiments/carbon_audit/data/
+codec_codex_experiments/dist/

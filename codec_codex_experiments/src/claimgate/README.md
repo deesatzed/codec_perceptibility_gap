@@ -62,7 +62,7 @@ own** (it retracted a cherry-picked carbon result; see `carbon_audit/RESULTS.md`
 ## Use
 
 ```python
-from src.refuse import Battery, base_rate, beats_difficulty
+from claimgate import Battery, base_rate, beats_difficulty
 
 battery = Battery([
     base_rate(events=wrong_flags, floor=0.30),                  # enough to detect?
@@ -90,9 +90,9 @@ else:
 ## Worked examples (runnable, real)
 
 ```bash
-python -m src.refuse.examples.example_plus_one_percent  # START HERE: a +1% 'win' REFUSED, a real gain VERIFIED
-python -m src.refuse.examples.example_difficulty        # real signal VERIFIED, difficulty-proxy REFUSED
-python -m src.refuse.examples.example_carbon            # a control-dependent carbon claim REFUSED
+python -m claimgate.examples.example_plus_one_percent  # START HERE: a +1% 'win' REFUSED, a real gain VERIFIED
+python -m claimgate.examples.example_difficulty        # real signal VERIFIED, difficulty-proxy REFUSED
+python -m claimgate.examples.example_carbon            # a control-dependent carbon claim REFUSED
 ```
 
 - `example_plus_one_percent` — **the landing demo.** "Model B beats A by ~1%" is

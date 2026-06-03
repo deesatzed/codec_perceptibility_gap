@@ -1,5 +1,5 @@
 import numpy as np
-from src.refuse import base_rate, beats_difficulty, permutation_null, collinearity, coverage
+from claimgate import base_rate, beats_difficulty, permutation_null, collinearity, coverage
 
 
 def test_base_rate_refuses_scarce_and_passes_rich():

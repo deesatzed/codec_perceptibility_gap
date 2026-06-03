@@ -1,6 +1,6 @@
 import numpy as np
-from src.refuse import Battery, improvement_beats_noise
-from src.refuse.examples.example_plus_one_percent import _accuracies
+from claimgate import Battery, improvement_beats_noise
+from claimgate.examples.example_plus_one_percent import _accuracies
 
 
 def test_noisy_small_gain_refused():

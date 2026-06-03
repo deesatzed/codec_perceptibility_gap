@@ -1,4 +1,4 @@
-"""refuse — a small library for measurements that refuse to fabricate.
+"""claimgate — gate a quantitative claim; refuse to report a number until it's earned.
 
 Wrap a quantitative claim in adversarial controls; the result is either
 Verified(value, receipts) or Refused(reason, evidence). This is RIGOR PACKAGED
@@ -11,7 +11,7 @@ Origin: distilled from a research program (energy/reliability/agent/carbon audit
 where this discipline repeatedly caught overclaims — including its own.
 
 Quick use:
-    from refuse import Battery, base_rate, beats_difficulty
+    from claimgate import Battery, base_rate, beats_difficulty
     b = Battery([
         base_rate(wrong, floor=0.30),
         beats_difficulty(signal, difficulty, wrong),
@@ -19,7 +19,7 @@ Quick use:
     result = b.evaluate()            # Verified(...) or Refused(...)
 """
 from .contract import (
-    Verified, Refused, Result, Control, Battery,
+    Verified, Refused, Result, Control, Battery, CheckResult,
     Earned, RefusedError, require_verified,
 )
 from .controls import (
@@ -32,7 +32,7 @@ from .controls import (
 )
 
 __all__ = [
-    "Verified", "Refused", "Result", "Control", "Battery",
+    "Verified", "Refused", "Result", "Control", "Battery", "CheckResult",
     "Earned", "RefusedError", "require_verified",
     "base_rate", "beats_difficulty", "permutation_null", "collinearity", "coverage",
     "improvement_beats_noise",

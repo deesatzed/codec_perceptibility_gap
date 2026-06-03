@@ -1,9 +1,9 @@
 """The worked examples must keep demonstrating the intended contrast."""
-from src.refuse.examples.example_difficulty import _case
-from src.refuse.examples.example_carbon import (
+from claimgate.examples.example_difficulty import _case
+from claimgate.examples.example_carbon import (
     control_choice_not_outcome_determining, PROJECT_LOSS, CONTROL_LOSSES,
 )
-from src.refuse.contract import Battery
+from claimgate import Battery
 
 
 def test_difficulty_real_signal_verified_proxy_refused():

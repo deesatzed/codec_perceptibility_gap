@@ -6,13 +6,13 @@ Two synthetic-but-honest cases run through the same Battery:
 
 This mirrors the real finding from the program (cross-model disagreement on
 MMLU-Pro was a difficulty proxy and got refused). Run:
-    python -m src.refuse.examples.example_difficulty
+    python -m claimgate.examples.example_difficulty
 """
 from __future__ import annotations
 
 import numpy as np
 
-from src.refuse import Battery, base_rate, beats_difficulty
+from claimgate import Battery, base_rate, beats_difficulty
 
 
 def _case(real_signal: bool, seed: int = 0):

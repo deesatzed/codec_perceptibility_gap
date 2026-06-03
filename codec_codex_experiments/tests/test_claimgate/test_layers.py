@@ -1,7 +1,7 @@
 """Tests for the Rust/Zig-informed contract layers."""
 import pytest
-from src.refuse import Battery, Verified, Refused, RefusedError, Earned, require_verified
-from src.refuse.contract import CheckResult
+from claimgate import Battery, Verified, Refused, RefusedError, Earned, require_verified
+from claimgate import CheckResult
 
 
 def _ok():
