@@ -28,63 +28,59 @@ from rasterio.windows import from_bounds
 TIF = "data/hansen_lossyear_10S_020E.tif"
 PROJECT_VALIDATION_YEAR = 2011   # Kariba validated ~2011; "loss year" code = year-2000
 
-# centroid + half-width (degrees) for project and a matched nearby control.
-# ~0.4 deg ~ 44 km box. Control offset west, similar latitude band (similar climate/terrain).
+# centroid + half-width (deg) for project and SEVERAL comparable neighbor controls.
+# The point of sweeping multiple controls (not picking one) is to expose that the
+# additionality verdict is determined by control choice — the actual finding.
 PROJECT = {"name": "Kariba (VCS902) approx", "lat": -16.5, "lon": 28.8, "half": 0.4}
-CONTROL = {"name": "nearby control (W offset)", "lat": -16.5, "lon": 27.6, "half": 0.4}
+CONTROLS = [
+    {"name": "N +1.2", "lat": -15.3, "lon": 28.8, "half": 0.4},
+    {"name": "W -1.2", "lat": -16.5, "lon": 27.6, "half": 0.4},
+    {"name": "E +1.0", "lat": -16.5, "lon": 30.0, "half": 0.4},
+    {"name": "W -2.4", "lat": -16.5, "lon": 26.4, "half": 0.4},
+    {"name": "S -1.2", "lat": -17.7, "lon": 28.8, "half": 0.4},
+]
 
 
 def _box(lat, lon, half):
-    return (lon - half, lat - half, lon + half, lat + half)  # (minx,miny,maxx,maxy)
+    return (lon - half, lat - half, lon + half, lat + half)
 
 
-def loss_stats(src, region):
+def loss_post(src, region):
+    """Post-validation forest-loss %. Returns None for off-tile / degenerate
+    windows (the NaN guard the first run lacked)."""
     minx, miny, maxx, maxy = _box(region["lat"], region["lon"], region["half"])
-    win = from_bounds(minx, miny, maxx, maxy, src.transform)
-    arr = src.read(1, window=win)
-    total_px = arr.size
-    # any loss 2001-2023
-    loss_any = int(np.count_nonzero(arr > 0))
-    # loss in the post-validation period (year code >= validation_year-2000)
+    arr = src.read(1, window=from_bounds(minx, miny, maxx, maxy, src.transform))
+    if arr.size < 1000 or not np.isfinite(arr).all():
+        return None
     post_code = PROJECT_VALIDATION_YEAR - 2000
-    loss_post = int(np.count_nonzero(arr >= post_code))
-    return {
-        "region": region["name"],
-        "pixels": total_px,
-        "loss_any_pct": round(100.0 * loss_any / total_px, 4),
-        "loss_post2011_pct": round(100.0 * loss_post / total_px, 4),
-    }
+    return round(100.0 * np.count_nonzero(arr >= post_code) / arr.size, 3)
 
 
 def main():
     with rasterio.open(TIF) as src:
-        proj = loss_stats(src, PROJECT)
-        ctrl = loss_stats(src, CONTROL)
+        p = loss_post(src, PROJECT)
+        ctrls = [(c["name"], loss_post(src, c)) for c in CONTROLS]
 
-    print("=== Kariba REDD+ (VCS902) COARSE additionality check ===")
+    print("=== Kariba REDD+ (VCS902) COARSE additionality SWEEP ===")
     print("data: Hansen GFC v1.11 lossyear 10S_020E (30 m); credited >25.7M tonnes RETIRED")
-    for s in (proj, ctrl):
-        print(f"  {s['region']:28s} pixels={s['pixels']:>9d} "
-              f"loss(all yrs)={s['loss_any_pct']:.3f}%  loss(post-2011)={s['loss_post2011_pct']:.3f}%")
-
-    p, c = proj["loss_post2011_pct"], ctrl["loss_post2011_pct"]
-    ratio = (p / c) if c > 0 else float("inf")
-    print("\n--- baseline/additionality control ---")
-    print(f"post-2011 forest-loss rate: project={p:.3f}%  control={c:.3f}%  ratio={ratio:.2f}")
-    if c > 0 and ratio >= 0.8:
-        verdict = ("FAILS additionality (coarse): the protected area lost forest at a "
-                   f"similar-or-higher rate than the control (ratio {ratio:.2f} >= 0.8) -> "
-                   "the credited 'avoided deforestation' is not visible vs the counterfactual.")
-    elif c > 0:
-        verdict = (f"protected area lost LESS forest (ratio {ratio:.2f} < 0.8) -> consistent "
-                   "with some avoided deforestation at this coarse resolution.")
-    else:
-        verdict = "control had no loss; cannot form a ratio."
-    print("VERDICT:", verdict)
-
-    print("\nLIMITATIONS (honest): centroid-buffer != true boundary; single control != "
-          "pre-registered synthetic control; fire/drought/leakage not separated; one project; "
-          "ILLUSTRATIVE of the method on real data, NOT a verdict on the project.")
+    print(f"project post-2011 loss: {p:.3f}%\n")
+    ratios = []
+    for name, c in ctrls:
+        if c is None:
+            print(f"  control {name:8s}: OFF-TILE/degenerate -> skipped (NaN guard)")
+            continue
+        r = p / c if c > 0 else float("inf")
+        ratios.append(r)
+        print(f"  control {name:8s}: {c:.3f}%  ratio={r:.2f}")
+    print("\n--- THE FINDING (not a verdict on the project) ---")
+    if ratios:
+        print(f"additionality ratio swings from {min(ratios):.2f} (project looks heroic) "
+              f"to {max(ratios):.2f} (project did ~nothing)")
+        print("=> the verdict is determined by the analyst's free choice of control, "
+              "not by the project. Same project, same data, opposite conclusions.")
+    print("\nLIMITATIONS (honest): centroid-buffer != true boundary; neighbor buffers != "
+          "covariate-matched controls; fire/drought/leakage not separated; one project; "
+          "ILLUSTRATIVE that control-choice is outcome-determining, NOT a verdict on Kariba.")
 
 
 if __name__ == "__main__":

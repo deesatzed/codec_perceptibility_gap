@@ -1,5 +1,16 @@
 # Carbon-offset additionality — premise validation on real public data
 
+> **CORRECTION (contrarian self-audit).** An earlier version of this file
+> headlined a single ratio of **0.33** ("project lost 1/3 the control's forest")
+> from ONE hand-picked control area. A contrarian check swept multiple comparable
+> neighbor controls and the ratio swings from **0.15 to 0.97** depending purely on
+> which control is chosen (plus one off-tile control that silently produced a NaN
+> in the first run). **The 0.33 headline is retracted as an artifact of control
+> choice.** This is not a footnote — it IS the finding (see below), and it is the
+> discipline catching its own overclaim. The corrected result is the *sweep*, not
+> any single number.
+
+
 A small, honest test of whether the no-fabrication discipline (specifically the
 **additionality/baseline control**) has real purchase on a high-consequence domain
 with **public, fetchable data + public ground truth**. Domain selected after five
@@ -22,15 +33,22 @@ prior near-misses, under a hard "public data" requirement.
   counterfactual; the additionality control asks whether the protected area
   actually lost less forest than a comparable un-protected area.
 
-## The measured result
+## The measured result (corrected: a SWEEP, not one number)
 
-| Region | post-2011 forest-loss |
-|---|---|
-| Kariba project buffer (approx) | 0.60% |
-| Nearby control buffer (hand-picked) | 1.80% |
-| ratio | 0.33 |
+Project post-2011 forest loss: **0.60%**. Five comparable neighbor controls:
 
-At this coarse resolution the protected area lost forest at ~1/3 the control rate.
+| Control (offset) | post-2011 loss | project/control ratio | what it would imply |
+|---|---|---|---|
+| N (+1.2°) | 4.12% | 0.15 | project looks heroic |
+| W (−1.2°) | 1.80% | 0.33 | project looks great |
+| E (+1.0°) | 0.71% | 0.85 | project looks ~neutral |
+| W (−2.4°) | 0.63% | 0.96 | project did ~nothing |
+| S (−1.2°) | 0.62% | 0.97 | project did ~nothing |
+
+**Same project, same satellite data, same period — the additionality verdict
+swings from 0.15 (saved almost everything) to 0.97 (saved nothing) purely by which
+neighbor you choose as the control.** (A sixth control fell off the tile and the
+first run silently returned NaN — itself a caught measurement bug.)
 
 ## The honest finding (this is the real point)
 
