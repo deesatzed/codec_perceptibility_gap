@@ -1,0 +1,37 @@
+name: claimgate
+on:
+  push:
+    paths: ["src/claimgate/**", "tests/test_claimgate/**", "pyproject.toml", ".github/workflows/claimgate-ci.yml"]
+  pull_request:
+    paths: ["src/claimgate/**", "tests/test_claimgate/**", "pyproject.toml"]
+
+jobs:
+  build-install-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: deps
+        run: pip install ruff build twine pytest mypy numpy
+      - name: lint
+        run: ruff check src/claimgate
+      - name: types
+        run: mypy src/claimgate --ignore-missing-imports
+      - name: build sdist + wheel
+        run: python -m build
+      - name: twine metadata check
+        run: twine check dist/*
+      - name: clean-venv install + import + examples (the real gate)
+        run: |
+          python -m venv /tmp/clean
+          /tmp/clean/bin/pip install dist/*.whl pytest numpy
+          /tmp/clean/bin/python -c "import claimgate as c; assert c.Battery and c.__version__"
+          /tmp/clean/bin/python -m claimgate.examples.example_plus_one_percent
+          /tmp/clean/bin/python -m claimgate.examples.example_difficulty
+      - name: unit tests
+        run: pytest tests/test_claimgate -q

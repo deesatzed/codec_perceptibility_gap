@@ -18,6 +18,8 @@ Quick use:
     ])
     result = b.evaluate()            # Verified(...) or Refused(...)
 """
+__version__ = "0.1.0"
+
 from .contract import (
     Verified, Refused, Result, Control, Battery, CheckResult,
     Earned, RefusedError, require_verified,

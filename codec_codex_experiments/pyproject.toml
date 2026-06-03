@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "claimgate"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Gate a quantitative claim: wrap it in adversarial controls and get Verified | Refused. Refuses to report a number until it's earned."
 readme = "src/claimgate/README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = { file = "LICENSE" }
 authors = [{ name = "Wayne A. Satz" }]
 keywords = ["statistics", "validation", "evaluation", "reproducibility", "skill-score", "permutation-test", "baseline", "abstention"]
 classifiers = [
@@ -23,8 +23,15 @@ dependencies = ["numpy>=1.24"]
 [project.optional-dependencies]
 dev = ["pytest>=7", "ruff>=0.5", "build>=1.0", "twine>=5.0"]
 
+[tool.hatch.version]
+path = "src/claimgate/__init__.py"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/claimgate"]
+artifacts = ["src/claimgate/py.typed"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/claimgate", "LICENSE"]
 
 [tool.ruff]
 line-length = 100
