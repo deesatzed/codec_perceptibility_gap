@@ -18,7 +18,10 @@ Quick use:
     ])
     result = b.evaluate()            # Verified(...) or Refused(...)
 """
-from .contract import Verified, Refused, Result, Control, Battery
+from .contract import (
+    Verified, Refused, Result, Control, Battery,
+    Earned, RefusedError, require_verified,
+)
 from .controls import (
     base_rate,
     beats_difficulty,
@@ -30,6 +33,7 @@ from .controls import (
 
 __all__ = [
     "Verified", "Refused", "Result", "Control", "Battery",
+    "Earned", "RefusedError", "require_verified",
     "base_rate", "beats_difficulty", "permutation_null", "collinearity", "coverage",
     "improvement_beats_noise",
 ]

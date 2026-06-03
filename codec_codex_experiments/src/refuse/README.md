@@ -14,6 +14,38 @@ plausible-looking number.
 Think `try/except` for over-claiming: wrap the measurement, get back a value with
 receipts or a refusal with evidence.
 
+### The contract is enforced, not advised (Rust/Zig-informed design)
+
+A refusal does not sit there with a `None` you might forget to check — the value
+is **unreachable**:
+
+```python
+r = battery.evaluate(value=score)
+
+r.unwrap()            # value if Verified;  RAISES RefusedError if Refused
+r.unwrap_or(default)  # value, or your explicit default on refusal
+r.value               # on a Refused: RAISES (trapped) — never a silent None
+r.match(verified=use, refused=handle)   # forces you to handle BOTH arms
+
+# typestate: a verified value can be 'branded' so downstream code can DEMAND it
+earned = r.earned()                      # Earned — only mintable from a Verified
+def deploy(metric): val = require_verified(metric); ...   # rejects raw numbers
+
+# explicit pipeline: refusal short-circuits, no hidden control flow
+(battery.evaluate(value=x)
+    .and_then(verify_next_step)          # skipped entirely if already refused
+    .map(transform))                      # transforms a verified value, carries receipts
+
+Battery([])           # fails at CONSTRUCTION, not at evaluate (config checked early)
+```
+
+Design notes: extraction modeled on Rust's `Result` (you must unwrap or
+pattern-match; ignoring a refusal takes deliberate effort); the `Earned` brand is a
+typestate so unverified numbers can be rejected at a function boundary; the
+pipeline + construction-time check follow Zig's "errors are values, no hidden
+control flow, fail early." Pure-Python/numpy — the *ideas* are borrowed, not the
+runtime.
+
 ## Honest framing (read this first)
 
 This is **rigor packaged for reuse, not a novel technique.** Every control is

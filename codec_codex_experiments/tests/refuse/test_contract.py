@@ -24,13 +24,27 @@ def test_any_fail_returns_refused_with_first_reason():
 
 
 def test_default_is_refuse_not_a_silent_number():
-    # the whole point: a failing control yields NO value, a typed refusal instead
+    # Layer-1 enforcement: touching .value on a refusal RAISES (loud, typed),
+    # never silently returns None. unwrap() raises; unwrap_or(default) is the out.
+    import pytest
+    from src.refuse import RefusedError
     r = Battery([_fail()]).evaluate(value=99)
     assert isinstance(r, Refused)
-    assert not hasattr(r, "value")
+    with pytest.raises(RefusedError):
+        _ = r.value
+    with pytest.raises(RefusedError):
+        r.unwrap()
+    assert r.unwrap_or(-1) == -1
 
 
 def test_empty_battery_rejected():
     import pytest
     with pytest.raises(ValueError):
         Battery([])
+
+
+def test_non_callable_control_rejected_at_construction():
+    # Layer-3: malformed config fails at BUILD, not at evaluate.
+    import pytest
+    with pytest.raises(TypeError):
+        Battery([42])  # not callable
