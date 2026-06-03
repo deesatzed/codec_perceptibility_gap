@@ -1,0 +1,33 @@
+"""refuse — a small library for measurements that refuse to fabricate.
+
+Wrap a quantitative claim in adversarial controls; the result is either
+Verified(value, receipts) or Refused(reason, evidence). This is RIGOR PACKAGED
+FOR REUSE, not a novel technique — every control is standard statistics
+(base-rate, difficulty/triviality baseline, permutation null, bootstrap-CI
+separation, sampling coverage, collinearity). The value is the composition + the
+default-to-refuse contract, demonstrated on real worked examples.
+
+Origin: distilled from a research program (energy/reliability/agent/carbon audits)
+where this discipline repeatedly caught overclaims — including its own.
+
+Quick use:
+    from refuse import Battery, base_rate, beats_difficulty
+    b = Battery([
+        base_rate(wrong, floor=0.30),
+        beats_difficulty(signal, difficulty, wrong),
+    ])
+    result = b.evaluate()            # Verified(...) or Refused(...)
+"""
+from .contract import Verified, Refused, Result, Control, Battery
+from .controls import (
+    base_rate,
+    beats_difficulty,
+    permutation_null,
+    collinearity,
+    coverage,
+)
+
+__all__ = [
+    "Verified", "Refused", "Result", "Control", "Battery",
+    "base_rate", "beats_difficulty", "permutation_null", "collinearity", "coverage",
+]
