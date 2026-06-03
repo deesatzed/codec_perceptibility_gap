@@ -104,5 +104,23 @@ No threshold will be tuned after seeing results. 95th percentile is fixed now.
 
 ## 10. Deviations log
 
-(Any change from the above, made after freeze, is recorded here with date +
-reason. Empty at freeze.)
+- **2026-06-03 — INTERIM AFRICA PILOT (logged).** To de-risk the pipeline before
+  the full multi-continent covariate acquisition, the first run is an interim
+  pilot on the **15 African Official-boundary projects only**, using a **reduced
+  matching set**: prior-period forest-loss trend (the parallel-trends filter, §4
+  bullet 3) + same-area + latitude-band, all derived from Hansen. Roads, DEM/slope,
+  and WDPA (§4 bullets 1,2,4) are **deferred** to the full 66-project run. Rationale:
+  prior-period loss trend is the most predictive single covariate; this proves the
+  control-selection + placebo-null + refusal-gate pipeline end-to-end cheaply.
+  The pilot result will be labeled INTERIM and is NOT the paper result; the full
+  prereg covariate set will be applied before any portfolio/paper claim.
+
+- **2026-06-03 — PILOT FINDING -> method refinement (logged).** The interim Africa
+  pilot (PILOT_RESULTS.md) produced a cluster of NEGATIVE effects (project lost
+  more forest than "matched" controls, e.g. VCS1311 -11.7pp). Diagnosis: reduced
+  Hansen-only controls land on unphysical comparators (water / arid / already-
+  cleared land with structurally ~0 loss that also pass the prior-trend filter).
+  REFINEMENT for the full run (added to §4): controls must pass a **baseline-forest
+  mask** (Hansen treecover2000 >= threshold inside the control) so a control is
+  actually forest capable of being lost. This is a pre-result method correction
+  the pilot revealed, not a result-driven tweak; required before any verdict.
