@@ -1,5 +1,18 @@
 # Carbon-offset additionality — premise validation on real public data
 
+> **UPDATE (real project polygon + placebo null).** The approximate centroid-buffer
+> work below was superseded by `kariba_real_polygon.py`, which uses the project's
+> ACTUAL boundary (VCS902 'Official' polygon, ~10,763 km², from public Zenodo
+> 11459391 CC-BY) and a PLACEBO/PERMUTATION null over 30 candidate controls:
+> - in-project post-2011 forest loss: **0.370%**
+> - controls (n=30): mean **3.48%**, range **0.05%–8.80%**
+> - observed "avoided deforestation" effect: **+3.11 pp**
+> - placebo null (random control-vs-control |Δ|, p95): **7.72 pp**
+> - **Verdict: effect (3.11 pp) < placebo noise (7.72 pp) → does NOT beat the null
+>   → REFUSE to certify additionality.** Now the refusal is driven by a
+>   distribution of controls + a placebo null, NOT by a cherry-picked control —
+>   the cherry-pick-resistant version of the earlier finding, on the real footprint.
+
 > **CORRECTION (contrarian self-audit).** An earlier version of this file
 > headlined a single ratio of **0.33** ("project lost 1/3 the control's forest")
 > from ONE hand-picked control area. A contrarian check swept multiple comparable
