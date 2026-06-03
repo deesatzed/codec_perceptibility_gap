@@ -1,9 +1,18 @@
-# refuse — measurements that refuse to fabricate
+# refuse — a result type that withholds a number until it's earned
 
-A tiny library for putting a quantitative claim behind adversarial controls. The
-result is either **`Verified(value, receipts)`** or **`Refused(reason, evidence)`**.
-The default posture is to **refuse**: a number is only returned if it survives the
-checks.
+**The contract is the point.** `refuse` gives you one return type for any
+quantitative claim: **`Verified(value, receipts)`** or
+**`Refused(reason, evidence)`**. The default is to *refuse* — your pipeline does
+not get to report a "win," a "detection," or a "saving" until it survives a battery
+of adversarial controls, and when it can't, you get a typed reason instead of a
+plausible-looking number.
+
+> Not "guardrails" (that word means LLM-output safety). This gates **statistical
+> claims** — "B beats A by 1%", "this detector works", "we saved X%" — and refuses
+> the ones that don't hold up.
+
+Think `try/except` for over-claiming: wrap the measurement, get back a value with
+receipts or a refusal with evidence.
 
 ## Honest framing (read this first)
 
@@ -44,13 +53,19 @@ else:
 | `permutation_null(x, y)` | a correlation doesn't exceed its permutation null | permutation test |
 | `collinearity(control_var, label)` | the "control" is near-identical to the label (degenerate comparison) | collinearity / VIF |
 | `coverage(sampled_s, work_s, floor)` | a measurement didn't sample enough of the work window | measurement coverage |
+| `improvement_beats_noise(scores_a, scores_b)` | a "B beats A" gain's paired bootstrap CI includes 0 (inside run-to-run noise) | "+1% is not enough" / paired bootstrap |
 
 ## Worked examples (runnable, real)
 
 ```bash
-python -m src.refuse.examples.example_difficulty   # real signal VERIFIED, difficulty-proxy REFUSED
-python -m src.refuse.examples.example_carbon        # a control-dependent carbon claim REFUSED
+python -m src.refuse.examples.example_plus_one_percent  # START HERE: a +1% 'win' REFUSED, a real gain VERIFIED
+python -m src.refuse.examples.example_difficulty        # real signal VERIFIED, difficulty-proxy REFUSED
+python -m src.refuse.examples.example_carbon            # a control-dependent carbon claim REFUSED
 ```
+
+- `example_plus_one_percent` — **the landing demo.** "Model B beats A by ~1%" is
+  refused when the paired gain sits inside run-to-run noise; a genuine +5.5% gain
+  is verified. The over-claim everyone has shipped, caught by default.
 
 - `example_difficulty` — shows a genuine signal passing and a "difficulty in
   disguise" signal being refused (mirrors the program's MMLU-Pro finding).

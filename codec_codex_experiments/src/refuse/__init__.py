@@ -25,9 +25,11 @@ from .controls import (
     permutation_null,
     collinearity,
     coverage,
+    improvement_beats_noise,
 )
 
 __all__ = [
     "Verified", "Refused", "Result", "Control", "Battery",
     "base_rate", "beats_difficulty", "permutation_null", "collinearity", "coverage",
+    "improvement_beats_noise",
 ]

@@ -13,6 +13,9 @@ Controls:
                     near-identical to the label (the comparison is degenerate).
 - coverage:         refuse a measurement whose sampling did not cover the work
                     window (e.g. energy sampled < X% of the measured interval).
+- improvement_beats_noise: refuse to declare 'B beats A' unless the PAIRED
+                    per-unit improvement's bootstrap CI is strictly above zero
+                    (the '+1% is not enough' guardrail against over-claiming wins).
 """
 from __future__ import annotations
 
@@ -123,6 +126,36 @@ def permutation_null(x: List[float], y: List[float], n_perm: int = 500, seed: in
         if corr > p95:
             return CheckResult(name, True, f"corr {corr:.3f} > null p95 {p95:.3f}", ev)
         return CheckResult(name, False, f"corr {corr:.3f} <= null p95 {p95:.3f} (not beyond chance)", ev)
+    return _check
+
+
+def improvement_beats_noise(scores_a: List[float], scores_b: List[float],
+                            n_boot: int = 2000, seed: int = 11,
+                            name: str = "improvement_beats_noise") -> Control:
+    """Refuse the claim 'B beats A' unless the PAIRED per-unit improvement
+    (b_i - a_i, e.g. per-seed or per-item) has a bootstrap CI strictly above 0.
+
+    This is the '+1% is not enough' guardrail (cf. arXiv 2511.19794): a headline
+    mean gain is not a win if it sits inside run-to-run noise. scores_a/scores_b
+    must be PAIRED (same length, aligned units)."""
+    def _check() -> CheckResult:
+        a = np.asarray(scores_a, float); b = np.asarray(scores_b, float)
+        if a.shape != b.shape or a.size < 2:
+            return CheckResult(name, False, "scores must be paired, aligned, length>=2", {})
+        delta = b - a
+        mean_gain = float(delta.mean())
+        rng = np.random.default_rng(seed)
+        n = len(delta)
+        boots = [float(delta[rng.choice(n, n, replace=True)].mean()) for _ in range(n_boot)]
+        lo, hi = np.percentile(boots, [2.5, 97.5])
+        ev = {"mean_gain": round(mean_gain, 4),
+              "gain_ci95": [round(float(lo), 4), round(float(hi), 4)], "n_pairs": n}
+        if lo > 0.0:
+            return CheckResult(name, True,
+                               f"B beats A: mean gain {mean_gain:+.4f}, CI lo={lo:.4f} > 0", ev)
+        return CheckResult(name, False,
+                           f"'B beats A' NOT supported: mean gain {mean_gain:+.4f} but CI "
+                           f"[{lo:.4f},{hi:.4f}] includes 0 (inside run-to-run noise)", ev)
     return _check
 
 
